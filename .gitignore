@@ -1,0 +1,21 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Databases
+backend/photography.db
+
+# Dynamic client uploads
+backend/static/uploads/*
+!backend/static/uploads/favicon.png
+
+# Environments & virtualenvs
+.venv/
+venv/
+ENV/
+env/
