@@ -108,20 +108,25 @@ h1, h2, h3, h4, h5, h6 {
 /* Glass Header */
 header {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
+    top: 1.25rem;
+    left: 2rem;
+    right: 2rem;
+    width: calc(100% - 4rem);
     z-index: 100;
     background: var(--glass-bg);
     backdrop-filter: var(--glass-blur);
-    border-bottom: 1px solid var(--border-color);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border-color);
+    border-radius: 100px;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition-smooth);
 }
 
 .header-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 70px;
+    height: 60px;
 }
 
 .logo {
@@ -196,7 +201,8 @@ nav {
     font-size: 4rem;
     margin-bottom: 1.5rem;
     color: var(--text-primary);
-    animation: fadeInDown 1s ease-out;
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .hero-content p {
@@ -206,6 +212,13 @@ nav {
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
+}
+
+.hero-content > div {
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1) 0.6s forwards;
 }
 
 .btn {
@@ -227,7 +240,8 @@ nav {
 
 .btn-primary:hover {
     background-color: var(--primary-light);
-    box-shadow: 0 0 20px rgba(108, 194, 74, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(108, 194, 74, 0.4);
 }
 
 .btn-outline {
@@ -239,6 +253,8 @@ nav {
 .btn-outline:hover {
     background-color: var(--text-primary);
     color: var(--bg-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255, 255, 255, 0.05);
 }
 
 /* Sections */
@@ -281,8 +297,9 @@ section {
 
 .service-card:hover {
     border-color: var(--primary);
-    transform: translateY(-5px);
+    transform: translateY(-8px);
     background-color: var(--bg-card-hover);
+    box-shadow: var(--shadow-soft);
 }
 
 .service-card h3 {
@@ -479,6 +496,7 @@ textarea.form-control {
     color: var(--primary);
     background-color: rgba(108, 194, 74, 0.2);
     border-color: var(--primary);
+    animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 /* Lightbox */
@@ -696,4 +714,21 @@ footer {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.4); }
+    100% { transform: scale(1); }
 }
