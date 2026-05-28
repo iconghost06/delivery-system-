@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}About Us | Aura Photography{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 120px; padding-bottom: 6rem;">
+    <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+        <h6 style="text-transform: uppercase; letter-spacing: 4px; font-size: 0.85rem; margin-bottom: 1.5rem; color: var(--primary);">Who We Are</h6>
+        <h1 style="font-size: 3.5rem; margin-bottom: 2rem;">Documenting Stories For Over A Decade</h1>
+        <p style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 3rem; line-height: 1.8;">
+            At Aura Photography, we believe a great photograph doesn't just display a subject—it evokes a memory. Over the last 10 years, our team has documented over 1,000 weddings and celebrations across Chennai and Tamil Nadu.
+        </p>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 4rem; align-items: center;">
+        <div>
+            <img src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&w=800&q=80" alt="Photographer" style="width: 100%; border-radius: 6px; border: 1px solid var(--border-color);">
+        </div>
+        <div>
+            <h2 style="margin-bottom: 1.5rem;">Dedicated To One Story At A Time</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                Unlike high-volume studios that run multiple photography crews simultaneously, we hold a strict policy of booking **only one wedding per day**. 
+            </p>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                This ensures our core artistic team is fully present, focused, and dedicated to capturing the specific layout and emotional nuances of your event. 
+            </p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
+                <div>
+                    <h3 style="color: var(--primary); font-size: 2.5rem; font-weight: 700;">1000+</h3>
+                    <p style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);">Weddings Shot</p>
+                </div>
+                <div>
+                    <h3 style="color: var(--primary); font-size: 2.5rem; font-weight: 700;">10+</h3>
+                    <p style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);">Years Experience</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

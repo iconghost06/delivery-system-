@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Portfolio | Aura Photography{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 120px; padding-bottom: 6rem;">
+    <div class="section-header">
+        <h2>Portfolio Showcase</h2>
+        <p>A selection of our favorite frames categorized by stories. Clean, candid, and cinematic.</p>
+    </div>
+    
+    <!-- Filter Toolbar -->
+    <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 3rem;">
+        <button class="btn btn-outline" style="border-color: var(--primary); color: var(--primary);" onclick="filterPortfolio('all')">All</button>
+        <button class="btn btn-outline" onclick="filterPortfolio('wedding')">Weddings</button>
+        <button class="btn btn-outline" onclick="filterPortfolio('outdoor')">Outdoors</button>
+        <button class="btn btn-outline" onclick="filterPortfolio('maternity')">Maternity</button>
+    </div>
+    
+    <!-- Gallery Grid -->
+    <div class="portfolio-grid">
+        <!-- Sample Items with category bindings -->
+        <div class="portfolio-item" data-category="wedding">
+            <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=600&q=80" alt="Wedding">
+            <div class="portfolio-overlay">
+                <h3 style="font-family: var(--font-heading);">Ananya & Prashanth</h3>
+                <p style="font-size: 0.85rem; color: var(--primary);">Wedding Ceremony</p>
+            </div>
+        </div>
+        <div class="portfolio-item" data-category="outdoor">
+            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80" alt="Pre-Wedding">
+            <div class="portfolio-overlay">
+                <h3 style="font-family: var(--font-heading);">Golden Hour Love</h3>
+                <p style="font-size: 0.85rem; color: var(--primary);">Pre-Wedding Outdoor</p>
+            </div>
+        </div>
+        <div class="portfolio-item" data-category="wedding">
+            <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=600&q=80" alt="Traditional Wedding">
+            <div class="portfolio-overlay">
+                <h3 style="font-family: var(--font-heading);">South Indian Joy</h3>
+                <p style="font-size: 0.85rem; color: var(--primary);">Traditional Ceremony</p>
+            </div>
+        </div>
+        <div class="portfolio-item" data-category="maternity">
+            <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=600&q=80" alt="Maternity">
+            <div class="portfolio-overlay">
+                <h3 style="font-family: var(--font-heading);">A New Beginning</h3>
+                <p style="font-size: 0.85rem; color: var(--primary);">Maternity Portrait</p>
+            </div>
+        </div>
+        <div class="portfolio-item" data-category="outdoor">
+            <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80" alt="Couple Outdoor">
+            <div class="portfolio-overlay">
+                <h3 style="font-family: var(--font-heading);">Karthik & Divya</h3>
+                <p style="font-size: 0.85rem; color: var(--primary);">Outdoor Shoot</p>
+            </div>
+        </div>
+        <div class="portfolio-item" data-category="wedding">
+            <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=600&q=80" alt="Candid Moment">
+            <div class="portfolio-overlay">
+                <h3 style="font-family: var(--font-heading);">Shruti & Vijay</h3>
+                <p style="font-size: 0.85rem; color: var(--primary);">Candid Wedding</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function filterPortfolio(category) {
+    const items = document.querySelectorAll('.portfolio-item');
+    const buttons = document.querySelectorAll('button');
+    
+    // Update button states
+    buttons.forEach(btn => {
+        if(btn.innerText.toLowerCase().includes(category)) {
+            btn.style.borderColor = 'var(--primary)';
+            btn.style.color = 'var(--primary)';
+        } else {
+            btn.style.borderColor = 'var(--text-primary)';
+            btn.style.color = 'var(--text-primary)';
+        }
+    });
+
+    items.forEach(item => {
+        if (category === 'all' || item.getAttribute('data-category') === category) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}My Galleries | Aura Photography{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 120px; padding-bottom: 6rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem;">
+        <div>
+            <h1 style="font-size: 2.5rem;">My Event Galleries</h1>
+            <p style="color: var(--text-secondary); font-size: 0.95rem;">Logged in as: <strong>{{ client.username }}</strong></p>
+        </div>
+        <a href="/client/logout" class="btn btn-outline" style="padding: 0.5rem 1.5rem; font-size: 0.85rem; border-color: var(--accent); color: var(--accent);">Log Out</a>
+    </div>
+    
+    <!-- Galleries List Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem;">
+        {% if galleries|length == 0 %}
+            <div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--text-muted); background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px;">
+                <h3>No galleries assigned to your account yet.</h3>
+                <p>Please contact Aura Photography studio.</p>
+            </div>
+        {% endif %}
+        
+        {% for g in galleries %}
+            <div class="service-card" style="display: flex; flex-direction: column; padding: 0; overflow: hidden;">
+                {% if g.cover_image %}
+                    <img src="{{ g.cover_image }}" style="width: 100%; height: 200px; object-fit: cover;">
+                {% else %}
+                    <div style="width: 100%; height: 200px; background-color: var(--bg-dark); display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+                        No Cover Image
+                    </div>
+                {% endif %}
+                <div style="padding: 2rem;">
+                    <h3>{{ g.title }}</h3>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.25rem; margin-bottom: 1rem;">Event Date: {{ g.event_date or "N/A" }}</p>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">{{ g.description or "Select your favorites for printing." }}</p>
+                    <a href="/gallery/{{ g.secure_hash }}" class="btn btn-primary" style="display: block; text-align: center; font-size: 0.85rem;">View Gallery & Proofing</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

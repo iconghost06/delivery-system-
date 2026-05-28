@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login | Aura Photography{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 150px; padding-bottom: 6rem; max-width: 480px;">
+    <div style="background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 3rem; text-align: center;">
+        <h2 style="margin-bottom: 1rem;">Photographer Portal</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.95rem;">
+            Log in to manage event galleries, upload client photos, and view proofing selections.
+        </p>
+        
+        {% if error %}
+            <div style="background-color: rgba(235, 94, 85, 0.15); border: 1px solid var(--accent); color: var(--accent); padding: 0.75rem; border-radius: 4px; font-size: 0.85rem; margin-bottom: 1.5rem; text-align: center;">
+                {{ error }}
+            </div>
+        {% endif %}
+        
+        <form action="/admin/login" method="POST">
+            <div class="form-group" style="text-align: left;">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" class="form-control" required placeholder="E.g., admin">
+            </div>
+            <div class="form-group" style="text-align: left;">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" required placeholder="Enter password...">
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Access Dashboard</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

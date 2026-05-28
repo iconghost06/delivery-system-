@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}{{ gallery.title }} | Client Gallery{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Client gallery unique overrides */
+    .gallery-item-wrapper {
+        position: relative;
+    }
+    .comment-badge {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        background-color: var(--primary);
+        color: var(--bg-dark);
+        font-weight: 700;
+        font-size: 0.7rem;
+        padding: 0.1rem 0.4rem;
+        border-radius: 10px;
+        pointer-events: none;
+    }
+    .floating-summary-bar {
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--bg-card);
+        border: 1px solid var(--primary);
+        border-radius: 30px;
+        padding: 0.8rem 2rem;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        z-index: 99;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        backdrop-filter: var(--glass-blur);
+        animation: fadeInUp 0.5s ease-out;
+    }
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translate(-50%, 20px); }
+        to { opacity: 1; transform: translate(-50%, 0); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 120px; padding-bottom: 8rem;">
+    <!-- Gallery Info -->
+    <div class="gallery-header">
+        <h6 style="text-transform: uppercase; color: var(--primary); letter-spacing: 2px;">Private Client Portal</h6>
+        <h1 style="font-size: 3rem; margin-top: 0.5rem; margin-bottom: 1rem;">{{ gallery.title }}</h1>
+        <p style="color: var(--text-secondary);">Event Date: {{ gallery.event_date or "N/A" }} &bull; Select your favorites to include in the physical album</p>
+    </div>
+    
+    <!-- Gallery Toolbar -->
+    <div class="gallery-toolbar">
+        <div class="toolbar-tabs">
+            <button class="toolbar-btn active" id="tab-all" onclick="setFilter('all')">All Photos ({{ gallery.photos|length }})</button>
+            <button class="toolbar-btn" id="tab-favs" onclick="setFilter('favs')">My Favorites (<span id="fav-count-header">{{ favorite_photo_ids|length }}</span>)</button>
+        </div>
+        
+        <div style="display: flex; gap: 1rem;">
+            <a href="/gallery/{{ gallery.secure_hash }}/download?download_type=all" class="btn btn-outline" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;">Download All</a>
+            <a href="/gallery/{{ gallery.secure_hash }}/download?download_type=favorites" class="btn btn-primary" id="btn-download-favs" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; {% if favorite_photo_ids|length == 0 %}display: none;{% endif %}">Download Favorites</a>
+        </div>
+    </div>
+    
+    <!-- Photo Grid -->
+    <div class="gallery-grid" id="gallery-grid">
+        {% if gallery.photos|length == 0 %}
+            <div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--text-muted);">
+                <h3>No photos uploaded yet.</h3>
+                <p>Please check back later or contact the studio.</p>
+            </div>
+        {% endif %}
+        
+        {% for photo in gallery.photos %}
+            <div class="gallery-item" data-photo-id="{{ photo.id }}" data-is-fav="{% if photo.id in favorite_photo_ids %}true{% else %}false{% endif %}">
+                <img src="/static/uploads/{{ gallery.id }}/{{ photo.filename }}" alt="{{ photo.original_name }}" onclick="openLightbox('{{ photo.id }}', '/static/uploads/{{ gallery.id }}/{{ photo.filename }}', '{{ photo.original_name }}')" loading="lazy">
+                
+                <!-- Comments count badge -->
+                {% set photo_comments = comments_by_photo.get(photo.id, []) %}
+                <span class="comment-badge" id="cmt-badge-{{ photo.id }}" {% if photo_comments|length == 0 %}style="display:none;"{% endif %}>
+                    {{ photo_comments|length }} Comments
+                </span>
+                
+                <div class="gallery-actions">
+                    <!-- Favorite Toggle Button -->
+                    <button class="action-icon {% if photo.id in favorite_photo_ids %}favorited{% endif %}" onclick="toggleFavorite(this, '{{ photo.id }}')" title="Add to Favorites">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+                        </svg>
+                    </button>
+                    <!-- Comments Open Drawer Button -->
+                    <button class="action-icon" onclick="openCommentDrawer('{{ photo.id }}', '/static/uploads/{{ gallery.id }}/{{ photo.filename }}', '{{ photo.original_name }}')" title="Add Layout Notes">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Floating Selection summary bar -->
+<div class="floating-summary-bar" id="summary-bar" {% if favorite_photo_ids|length == 0 %}style="display:none;"{% endif %}>
+    <div>
+        Selected: <strong id="fav-count-floating" style="color: var(--primary);">{{ favorite_photo_ids|length }}</strong> photos for Album
+    </div>
+    <div style="display: flex; gap: 0.5rem;">
+        <button class="btn btn-outline" style="padding: 0.4rem 1rem; font-size: 0.8rem;" onclick="copySelectionList()">Copy Filenames</button>
+        <button class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.8rem;" onclick="finalizeSelection()">Finalize & Notify Studio</button>
+    </div>
+</div>
+
+<!-- Lightbox Modal -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+    <div class="lightbox-content">
+        <img id="lightbox-img" src="" alt="">
+        <div style="color: var(--text-primary); text-align: center; margin-top: 1rem; font-size: 0.9rem;" id="lightbox-caption"></div>
+    </div>
+    <span style="position: absolute; top: 20px; right: 30px; font-size: 2rem; color: #fff; cursor: pointer;" onclick="closeLightbox(null)">&times;</span>
+</div>
+
+<!-- Comments Drawer -->
+<div class="drawer" id="comments-drawer">
+    <div class="drawer-header">
+        <h3>Photo Feedback</h3>
+        <span class="drawer-close" onclick="closeCommentDrawer()">&times;</span>
+    </div>
+    
+    <div style="width: 100%; height: 120px; border-radius: 4px; overflow: hidden; margin-bottom: 1rem; background-color: var(--bg-dark);">
+        <img id="drawer-preview-img" src="" style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
+    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;" id="drawer-preview-filename"></p>
+    
+    <!-- Comments List -->
+    <div class="comments-list" id="drawer-comments-list">
+        <!-- Injected via JS -->
+    </div>
+    
+    <!-- New Comment Form -->
+    <form id="comment-form" onsubmit="submitComment(event)">
+        <input type="hidden" id="comment-photo-id">
+        <div class="form-group">
+            <label for="comment-author">Your Name</label>
+            <input type="text" id="comment-author" class="form-control" placeholder="E.g., Client, Bride, Groom" required value="Client">
+        </div>
+        <div class="form-group">
+            <label for="comment-text">Instructions / Comments</label>
+            <textarea id="comment-text" class="form-control" placeholder="E.g., Please fix crop, make this black & white..." required style="min-height: 80px;"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.6rem;">Add Note</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/client_gallery.js"></script>
+<script>
+    // Inject DB comments for live reference on drawer toggle
+    const initialComments = {
+        {% for photo in gallery.photos %}
+            "{{ photo.id }}": [
+                {% set photo_comments = comments_by_photo.get(photo.id, []) %}
+                {% for c in photo_comments %}
+                    {
+                        "id": {{ c.id }},
+                        "author": "{{ c.author|escape }}",
+                        "text": "{{ c.text|escape }}",
+                        "timestamp": "{{ c.timestamp.strftime('%Y-%m-%d %H:%M') }}"
+                    },
+                {% endfor %}
+            ],
+        {% endfor %}
+    };
+    
+    // Set gallery secure hash globally
+    const GALLERY_HASH = "{{ gallery.secure_hash }}";
+</script>
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Services & Pricing | Aura Photography{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 120px; padding-bottom: 6rem;">
+    <div class="section-header">
+        <h2>Services & Packages</h2>
+        <p>Transparent pricing designed to fit your unique requirements. Use our calculator below to estimate custom packages.</p>
+    </div>
+    
+    <!-- Packages -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-bottom: 6rem;">
+        <div class="service-card" style="display: flex; flex-direction: column;">
+            <h3>Essential Story</h3>
+            <div style="font-size: 2rem; font-family: var(--font-heading); color: var(--primary); margin: 1rem 0;">₹45,000</div>
+            <ul style="list-style: none; margin-bottom: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li>1 Day Coverage (1 Crew)</li>
+                <li>Traditional Photo + Video</li>
+                <li>Unlimited Edited Digital Images</li>
+                <li>1 Softcover Photo Book</li>
+            </ul>
+            <a href="/contact-us" class="btn btn-outline" style="margin-top: auto; text-align: center;">Choose Essential</a>
+        </div>
+        
+        <div class="service-card" style="display: flex; flex-direction: column; border-color: var(--primary); transform: scale(1.03);">
+            <div style="background-color: var(--primary); color: var(--bg-dark); padding: 0.25rem 1rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700; width: fit-content; margin-bottom: 1rem; text-transform: uppercase;">Most Popular</div>
+            <h3>Premium Cinematic</h3>
+            <div style="font-size: 2rem; font-family: var(--font-heading); color: var(--primary); margin: 1rem 0;">₹85,000</div>
+            <ul style="list-style: none; margin-bottom: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li>2 Days Coverage (3 Crew)</li>
+                <li>Candid + Traditional Photo</li>
+                <li>Cinematic Wedding Film teaser</li>
+                <li>1 Premium Lay-Flat Heirloom Album</li>
+            </ul>
+            <a href="/contact-us" class="btn btn-primary" style="margin-top: auto; text-align: center;">Choose Premium</a>
+        </div>
+        
+        <div class="service-card" style="display: flex; flex-direction: column;">
+            <h3>Signature Luxury</h3>
+            <div style="font-size: 2rem; font-family: var(--font-heading); color: var(--primary); margin: 1rem 0;">₹1,35,000</div>
+            <ul style="list-style: none; margin-bottom: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li>Full Event Coverage (5 Crew)</li>
+                <li>Premium Candid Photos & Cinematography</li>
+                <li>Live Web Streaming Integration</li>
+                <li>2 Custom Premium Leather Albums</li>
+            </ul>
+            <a href="/contact-us" class="btn btn-outline" style="margin-top: auto; text-align: center;">Choose Signature</a>
+        </div>
+    </div>
+
+    <!-- Pricing Calculator -->
+    <div style="background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 3rem;">
+        <h3 style="font-size: 2rem; text-align: center; margin-bottom: 2rem;">Interactive Package Builder</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;">
+            <div>
+                <h4 style="margin-bottom: 1.5rem; color: var(--text-secondary);">Select Coverages:</h4>
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
+                        <input type="checkbox" id="calc-candid" value="30000" onchange="calculatePrice()" checked style="width: 18px; height: 18px; accent-color: var(--primary);">
+                        Candid Photography (+₹30,000)
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
+                        <input type="checkbox" id="calc-traditional" value="15000" onchange="calculatePrice()" checked style="width: 18px; height: 18px; accent-color: var(--primary);">
+                        Traditional Photography (+₹15,000)
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
+                        <input type="checkbox" id="calc-video" value="25000" onchange="calculatePrice()" onchange="calculatePrice()" style="width: 18px; height: 18px; accent-color: var(--primary);">
+                        Cinematic Wedding Film (+₹25,000)
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
+                        <input type="checkbox" id="calc-stream" value="12000" onchange="calculatePrice()" style="width: 18px; height: 18px; accent-color: var(--primary);">
+                        Live Streaming Web Feed (+₹12,000)
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
+                        <input type="checkbox" id="calc-album" value="18000" onchange="calculatePrice()" checked style="width: 18px; height: 18px; accent-color: var(--primary);">
+                        Lay-Flat Heirloom Album (+₹18,000)
+                    </label>
+                </div>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; border-left: 1px solid var(--border-color); padding-left: 2rem;">
+                <div style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 2px;">Estimated Total</div>
+                <div id="calculator-total" style="font-size: 3.5rem; font-family: var(--font-heading); color: var(--primary); margin: 1rem 0;">₹63,000</div>
+                <p style="font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-bottom: 2rem;">Price excludes GST. Custom deliverables will be detailed in your booking contract.</p>
+                <a href="/contact-us" class="btn btn-primary" style="width: 100%; text-align: center;">Book Custom Package</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function calculatePrice() {
+    let total = 0;
+    const items = [
+        'calc-candid',
+        'calc-traditional',
+        'calc-video',
+        'calc-stream',
+        'calc-album'
+    ];
+    
+    items.forEach(id => {
+        const checkbox = document.getElementById(id);
+        if(checkbox && checkbox.checked) {
+            total += parseInt(checkbox.value);
+        }
+    });
+    
+    document.getElementById('calculator-total').innerText = '₹' + total.toLocaleString('en-IN');
+}
+</script>
+{% endblock %}

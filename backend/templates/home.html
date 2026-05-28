@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Home | Aura Photography{% endblock %}
+
+{% block content %}
+<!-- Hero Banner -->
+<div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+        <h1>An Art of Observation</h1>
+        <p>Capture the soul, not just the smile. One of the best wedding and event photographers in Chennai, dedicating full attention to one wedding at a time.</p>
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <a href="/portfolio" class="btn btn-primary">View Portfolio</a>
+            <a href="/contact-us" class="btn btn-outline">Enquire Now</a>
+        </div>
+    </div>
+</div>
+
+<!-- Vision Section -->
+<section>
+    <div class="container" style="max-width: 900px; text-align: center;">
+        <h6 style="text-transform: uppercase; letter-spacing: 4px; font-size: 0.85rem; margin-bottom: 1.5rem; color: var(--primary);">Driven by Vision</h6>
+        <h2 style="font-size: 3rem; margin-bottom: 2rem; line-height: 1.2;">"Our vision has always been to capture one's soul, not just their smile."</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; text-align: left; color: var(--text-secondary);">
+            <p>It has little to do with the things you see, and everything to do with how you see them. Reality may fade, but memories won't. We provide impeccable attention to details.</p>
+            <p>With our experience of documenting over 1,000 weddings, we make sure you get the best possible frames to remember your special day and cherish it forever.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Services Highlights -->
+<section style="background-color: oklch(0.1 0.01 250);">
+    <div class="container">
+        <div class="section-header">
+            <h2>Moments We Capture Best</h2>
+            <p>Every event is special. We tailor our services to match the exact mood, aesthetic, and significance of your celebration.</p>
+        </div>
+        
+        <div class="services-grid">
+            <div class="service-card">
+                <h3>Wedding Stories</h3>
+                <p>Candid and traditional coverages that document real emotions, stolen glances, and celebrations.</p>
+                <a href="/portfolio" style="color: var(--primary); font-size: 0.85rem; font-weight: 600; display: inline-block; margin-top: 1.5rem;">Learn More &rarr;</a>
+            </div>
+            <div class="service-card">
+                <h3>Pre/Post-Weddings</h3>
+                <p>Beautiful cinematic outdoor sessions highlighting natural chemistry in scenic locations.</p>
+                <a href="/portfolio" style="color: var(--primary); font-size: 0.85rem; font-weight: 600; display: inline-block; margin-top: 1.5rem;">Learn More &rarr;</a>
+            </div>
+            <div class="service-card">
+                <h3>Maternity & Baby Showers</h3>
+                <p>Cherishing motherhood milestones with soft, warm, and memorable family photography.</p>
+                <a href="/portfolio" style="color: var(--primary); font-size: 0.85rem; font-weight: 600; display: inline-block; margin-top: 1.5rem;">Learn More &rarr;</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section>
+    <div class="container">
+        <div class="section-header">
+            <h2>What Clients Say</h2>
+            <p>Real stories and reviews from couples who trusted us with their special moments.</p>
+        </div>
+        
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p>"The team was incredibly professional and patient. They captured photos that we didn't even notice were being taken—real smiles, raw emotions. Absolutely love the album!"</p>
+                <div class="testimonial-author">Prashanth & Ananya - Wedding</div>
+            </div>
+            <div class="testimonial-card">
+                <p>"Best decision we made for our wedding. The candid photos are stunning, and the page-turn transitions in the physical album they designed are beautiful heirloom quality."</p>
+                <div class="testimonial-author">Vijay & Shruti - Wedding Story</div>
+            </div>
+            <div class="testimonial-card">
+                <p>"Outstanding outdoor shoot quality. They made us feel super comfortable, and the final picture editing was incredibly subtle and natural."</p>
+                <div class="testimonial-author">Karthik & Divya - Pre-Wedding</div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Wedding Films | Aura Photography{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 120px; padding-bottom: 6rem;">
+    <div class="section-header">
+        <h2>Wedding Films & Cinematography</h2>
+        <p>Cinematic wedding stories that capture the movement, sounds, and heartbeats of your celebrations.</p>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr; gap: 4rem; max-width: 800px; margin: 0 auto;">
+        <!-- Embedded Mock Videos -->
+        <div style="background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 1.5rem; text-align: center;">
+            <div style="width: 100%; aspect-ratio: 16/9; background-color: #000; border-radius: 4px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: var(--text-secondary);">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+            </div>
+            <h3>Ananya & Prashanth - Cinematic Teaser</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Shot on location in Chennai, India</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
