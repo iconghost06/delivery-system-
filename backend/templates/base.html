@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,29 +9,36 @@
     <link rel="stylesheet" href="/static/css/style.css">
     {% block extra_head %}{% endblock %}
 </head>
+
 <body>
 
     <!-- Header navigation -->
     <header>
         <div class="container header-container">
             <a href="/" class="logo">
-                <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);">
+                <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);">
                     <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
                     <circle class="logo-lens" cx="12" cy="13" r="4"></circle>
                 </svg>
                 AURA
             </a>
-            
+
             <nav>
                 <a href="/" class="nav-link {% if active_page == 'home' %}active{% endif %}">Home</a>
                 <a href="/about" class="nav-link {% if active_page == 'about' %}active{% endif %}">About Us</a>
                 <a href="/portfolio" class="nav-link {% if active_page == 'portfolio' %}active{% endif %}">Portfolio</a>
-                <a href="/our-services" class="nav-link {% if active_page == 'services' %}active{% endif %}">Services</a>
-                <a href="/wedding-film" class="nav-link {% if active_page == 'wedding_film' %}active{% endif %}">Films</a>
-                <a href="/live-stream" class="nav-link {% if active_page == 'live_stream' %}active{% endif %}">Live Stream</a>
+                <a href="/our-services"
+                    class="nav-link {% if active_page == 'services' %}active{% endif %}">Services</a>
+                <a href="/wedding-film"
+                    class="nav-link {% if active_page == 'wedding_film' %}active{% endif %}">Films</a>
+                <a href="/live-stream" class="nav-link {% if active_page == 'live_stream' %}active{% endif %}">Live
+                    Stream</a>
                 <a href="/blog" class="nav-link {% if active_page == 'blog' %}active{% endif %}">Blog</a>
                 <a href="/contact-us" class="nav-link {% if active_page == 'contact' %}active{% endif %}">Contact</a>
-                <a href="/client/login" class="nav-link nav-btn" style="margin-left: 1rem; border: 1px solid var(--primary); padding: 0.4rem 1rem; border-radius: 4px; color: var(--primary);">Client Login</a>
+                <a href="/client/login" class="nav-link nav-btn"
+                    style="margin-left: 1rem; border: 1px solid var(--primary); padding: 0.4rem 1rem; border-radius: 4px; color: var(--primary);">Client
+                    Login</a>
             </nav>
         </div>
     </header>
@@ -47,7 +55,8 @@
                 <div class="footer-col">
                     <h4>AURA</h4>
                     <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 1rem;">
-                        Capture the soul of the moment. We are premier event and wedding photographers documenting stories across Tamil Nadu and worldwide.
+                        Capture the soul of the moment. We are premier event and wedding photographers documenting
+                        stories across Tamil Nadu and worldwide.
                     </p>
                 </div>
                 <div class="footer-col">
@@ -68,14 +77,16 @@
                     </p>
                 </div>
             </div>
-            
+
             <div class="footer-bottom">
                 <div>Copyrights &copy; 2026 Aura Photography. All Rights Reserved.</div>
-                <div>Developed by Pepperpot</div>
+                <div>Developed by <aherf ref="https://www.innovvx.com/">innovvx.com</aherf>
+                </div>
             </div>
         </div>
     </footer>
 
     {% block scripts %}{% endblock %}
 </body>
+
 </html>
