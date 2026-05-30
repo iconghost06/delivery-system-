@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura Design Prototype</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 1. Custom Cursor Follower -->
+    <div class="cursor-dot" id="customCursor"></div>
+
+    <!-- 2. Floating Glassmorphic Header with Liquid Gooey Navigation -->
+    <header>
+        <div class="header-container">
+            <!-- Camera Logo with SVG mask in circle -->
+            <a href="#" class="logo" onmouseenter="setCursorState('hover')">
+                <svg class="logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                    <defs>
+                        <clipPath id="lens-circle-clip">
+                            <circle cx="12" cy="13" r="4.5" />
+                        </clipPath>
+                    </defs>
+                    <g clip-path="url(#lens-circle-clip)">
+                        <rect x="7" y="8" width="10" height="10" fill="var(--bg-dark)" />
+                        <!-- Previews that crossfade inside the lens -->
+                        <image id="lens-default" class="lens-pic active" x="7" y="8" width="10" height="10" href="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&w=100&q=80" />
+                        <image id="lens-wedding" class="lens-pic" x="7" y="8" width="10" height="10" href="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=100&q=80" />
+                        <image id="lens-landscape" class="lens-pic" x="7" y="8" width="10" height="10" href="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=100&q=80" />
+                    </g>
+                    <circle cx="12" cy="13" r="4.5" stroke="var(--primary)" stroke-width="0.5"/>
+                </svg>
+                <span>AURA</span>
+            </a>
+
+            <!-- Liquid Navbar -->
+            <nav class="nav-container" id="navBar">
+                <div class="magnetic-wrapper" onmouseenter="setCursorState('hover')"><a href="#" class="nav-link magnetic-link" onmouseenter="showLensPreview('lens-default', this)">Home</a></div>
+                <div class="magnetic-wrapper" onmouseenter="setCursorState('hover')"><a href="#" class="nav-link magnetic-link" onmouseenter="showLensPreview('lens-wedding', this)">Weddings</a></div>
+                <div class="magnetic-wrapper" onmouseenter="setCursorState('hover')"><a href="#" class="nav-link magnetic-link" onmouseenter="showLensPreview('lens-landscape', this)">Portraits</a></div>
+                <div class="magnetic-wrapper" onmouseenter="setCursorState('hover')"><a href="#" class="nav-link magnetic-link" onmouseenter="showLensPreview('lens-default', this)">About</a></div>
+                
+                <!-- Liquid background tracker pill -->
+                <div class="gooey-blob" id="navBlob"></div>
+            </nav>
+
+            <!-- Aperture Client Login Trigger -->
+            <div class="shutter-login-container" id="shutterMenuContainer">
+                <div class="shutter-btn" onclick="toggleShutterMenu()" onmouseenter="setCursorState('hover')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="2" x2="12" y2="22"></line>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                    </svg>
+                </div>
+                <div class="shutter-menu-panel">
+                    <h3 style="font-family: var(--font-heading); font-size: 1.25rem; margin-bottom: 0.5rem;">Access Portal</h3>
+                    <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 1rem;">Enter your client passcode</p>
+                    <input type="password" placeholder="Passcode..." style="width: 100%; padding: 0.5rem; background: var(--bg-dark); border: 1px solid var(--border-color); color: #fff; margin-bottom: 0.75rem; border-radius: 4px;">
+                    <button style="width: 100%; padding: 0.5rem; background: var(--primary); border: none; color: var(--bg-dark); font-weight: 700; border-radius: 4px; cursor: pointer;">Verify</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Liquid SVG Filter -->
+    <svg style="position: absolute; width: 0; height: 0;">
+        <defs>
+            <filter id="gooey-filter">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
+                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo" />
+                <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- Main Content Area: Editorial Broken Grid -->
+    <main style="padding-top: 150px; padding-bottom: 100px;">
+        <div class="container">
+            <!-- Title -->
+            <div class="hero-block">
+                <h1 class="hero-title">Capturing the <i class="italic-serif">Quiet</i> Tension</h1>
+                <p class="hero-subtitle">A multi-discipline photography practice dedicated to atmosphere, intimacy, and the quiet texture of light.</p>
+            </div>
+
+            <!-- Asymmetric Editorial Grid -->
+            <div class="editorial-grid">
+                <div class="grid-item item-large" onmouseenter="setCursorState('view')" onmouseleave="setCursorState('normal')">
+                    <div class="frame-label">[01]</div>
+                    <img src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&w=800&q=80" alt="Camera lens reflection">
+                    <div class="item-overlay">
+                        <h3>Light Leak study</h3>
+                        <p>Studio Work / 2026</p>
+                    </div>
+                </div>
+
+                <div class="grid-item item-small" onmouseenter="setCursorState('view')" onmouseleave="setCursorState('normal')">
+                    <div class="frame-label">[02]</div>
+                    <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=600&q=80" alt="Wedding ceremony detail">
+                    <div class="item-overlay">
+                        <h3>Ananya & Prashanth</h3>
+                        <p>Wedding Frame / 2026</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
