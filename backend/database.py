@@ -95,6 +95,24 @@ def init_db():
     );
     """)
     
+    # Safe schema migrations for existing databases
+    try:
+        cursor.execute("ALTER TABLE galleries ADD COLUMN download_pin TEXT;")
+    except sqlite3.OperationalError:
+        pass
+    try:
+        cursor.execute("ALTER TABLE galleries ADD COLUMN enable_watermark INTEGER DEFAULT 1;")
+    except sqlite3.OperationalError:
+        pass
+    try:
+        cursor.execute("ALTER TABLE favorites ADD COLUMN author TEXT DEFAULT 'Client';")
+    except sqlite3.OperationalError:
+        pass
+    try:
+        cursor.execute("ALTER TABLE comments ADD COLUMN parent_id INTEGER;")
+    except sqlite3.OperationalError:
+        pass
+    
     conn.commit()
     conn.close()
 

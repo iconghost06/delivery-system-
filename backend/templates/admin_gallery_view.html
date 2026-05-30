@@ -160,7 +160,7 @@
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem;" id="photos-container">
             {% for photo in gallery.photos %}
                 <div class="photo-card" id="photo-card-{{ photo.id }}">
-                    <img src="/static/uploads/{{ gallery.id }}/{{ photo.filename }}" alt="{{ photo.original_name }}">
+                    <img src="{% if photo.filename.startswith('http') %}{{ photo.filename }}{% else %}/static/uploads/{{ gallery.id }}/{{ photo.filename }}{% endif %}" alt="{{ photo.original_name }}">
                     
                     {% if photo.id in favorite_photo_ids %}
                         <span class="fav-indicator">⭐ Favorite</span>

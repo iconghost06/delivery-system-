@@ -14,22 +14,73 @@ from . import auth
 # Initialize DB on startup
 init_db()
 
-# Seed default admin if not present
-def seed_admin():
+# Seed default database if not present (admin, client, gallery, photos)
+def seed_database():
     conn = get_db_conn()
     try:
+        # 1. Admin
         admin_exists = conn.execute("SELECT * FROM admins WHERE username = 'admin'").fetchone()
         if not admin_exists:
             hashed = auth.hash_password("aura123")
             conn.execute("INSERT INTO admins (username, hashed_password) VALUES (?, ?)", ("admin", hashed))
             conn.commit()
             print("Default admin created: admin / aura123")
+            
+        # 2. Client
+        client_exists = conn.execute("SELECT * FROM clients WHERE username = 'sanjay'").fetchone()
+        if not client_exists:
+            hashed = auth.hash_password("sanjay123")
+            conn.execute("INSERT INTO clients (username, hashed_password) VALUES (?, ?)", ("sanjay", hashed))
+            conn.commit()
+            client_exists = conn.execute("SELECT * FROM clients WHERE username = 'sanjay'").fetchone()
+            print("Default client created: sanjay / sanjay123")
+            
+        client_id = client_exists["id"]
+        
+        # 3. Gallery
+        gallery_exists = conn.execute("SELECT * FROM galleries WHERE secure_hash = 'sanjay_priya'").fetchone()
+        if not gallery_exists:
+            conn.execute(
+                "INSERT INTO galleries (secure_hash, title, description, event_date, cover_image, is_private, client_id, download_pin, enable_watermark) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                ("sanjay_priya", "Sanjay & Priya's Eternal Harmony", "A classic fine-art cinematic celebration of eternal commitment.", 
+                 "2026-05-18", "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200",
+                 0, client_id, "1234", 1)
+            )
+            conn.commit()
+            gallery_exists = conn.execute("SELECT * FROM galleries WHERE secure_hash = 'sanjay_priya'").fetchone()
+            print("Default gallery created: sanjay_priya (PIN: 1234)")
+            
+        gallery_id = gallery_exists["id"]
+        
+        # 4. Photos
+        photos_count = conn.execute("SELECT COUNT(*) FROM photos WHERE gallery_id = ?", (gallery_id,)).fetchone()[0]
+        if photos_count == 0:
+            sample_pics = [
+                ("https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200", "ceremony_exchange.jpg"),
+                ("https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=1200", "garden_walk.jpg"),
+                ("https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=1200", "royal_indian_wedding.jpg"),
+                ("https://images.unsplash.com/photo-1507504038482-76210214dae1?auto=format&fit=crop&q=80&w=1200", "sunset_glance.jpg"),
+                ("https://images.unsplash.com/photo-1520854221256-174b1ec35836?auto=format&fit=crop&q=80&w=1200", "the_first_kiss.jpg"),
+                ("https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&q=80&w=1200", "rings_and_vows.jpg"),
+                ("https://images.unsplash.com/photo-1519225495810-7512c696505a?auto=format&fit=crop&q=80&w=1200", "bridal_radiance.jpg"),
+                ("https://images.unsplash.com/photo-1537655780520-1e392edd816a?auto=format&fit=crop&q=80&w=1200", "maternity_sunset.jpg"),
+                ("https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&q=80&w=1200", "newborn_tenderness.jpg"),
+                ("https://images.unsplash.com/photo-1484807352052-23338990c6c6?auto=format&fit=crop&q=80&w=1200", "family_picnic.jpg")
+            ]
+            for url, orig_name in sample_pics:
+                conn.execute(
+                    "INSERT INTO photos (filename, original_name, gallery_id) VALUES (?, ?, ?)",
+                    (url, orig_name, gallery_id)
+                )
+            conn.commit()
+            print(f"Seeded {len(sample_pics)} photos for sanjay_priya gallery.")
     except Exception as e:
-        print("Error seeding admin:", e)
+        print("Error seeding database:", e)
     finally:
         conn.close()
 
-seed_admin()
+seed_database()
 
 app = FastAPI(title="Aura Photography - Studio Portal")
 
@@ -136,7 +187,7 @@ async def submit_inquiry(
 
 @app.get("/client/login", response_class=HTMLResponse)
 async def client_login_page(request: Request, error: str | None = None):
-    return templates.TemplateResponse("client_login.html", {"request": request, "error": error})
+    return templates.TemplateResponse("client_login.html", {"request": request, "error": error, "active_page": "login"})
 
 @app.post("/client/login")
 async def client_login(
@@ -231,8 +282,13 @@ async def client_gallery(
     favorites_rows = conn.execute("SELECT * FROM favorites WHERE gallery_id = ?", (gallery["id"],)).fetchall()
     favorite_photo_ids = {f["photo_id"] for f in favorites_rows}
     
+    # Map favorites by photo to support multi-user selections
+    favorites_by_photo = {}
+    for f in favorites_rows:
+        favorites_by_photo.setdefault(f["photo_id"], []).append(f["author"])
+    
     # Load comments
-    comments_rows = conn.execute("SELECT * FROM comments WHERE gallery_id = ?", (gallery["id"],)).fetchall()
+    comments_rows = conn.execute("SELECT * FROM comments WHERE gallery_id = ? ORDER BY timestamp ASC", (gallery["id"],)).fetchall()
     comments_by_photo = {}
     for c in comments_rows:
         comments_by_photo.setdefault(c["photo_id"], []).append(dict(c))
@@ -245,6 +301,7 @@ async def client_gallery(
             "request": request, 
             "gallery": gallery, 
             "favorite_photo_ids": favorite_photo_ids,
+            "favorites_by_photo": favorites_by_photo,
             "comments_by_photo": comments_by_photo
         }
     )
@@ -253,6 +310,7 @@ async def client_gallery(
 async def toggle_favorite(
     secure_hash: str,
     photo_id: int = Form(...),
+    author: str = Form("Client")
 ):
     conn = get_db_conn()
     gallery = conn.execute("SELECT * FROM galleries WHERE secure_hash = ?", (secure_hash,)).fetchone()
@@ -261,8 +319,8 @@ async def toggle_favorite(
         return {"error": "Gallery not found"}
         
     existing = conn.execute(
-        "SELECT * FROM favorites WHERE gallery_id = ? AND photo_id = ?",
-        (gallery["id"], photo_id)
+        "SELECT * FROM favorites WHERE gallery_id = ? AND photo_id = ? AND author = ?",
+        (gallery["id"], photo_id, author)
     ).fetchone()
     
     if existing:
@@ -272,8 +330,8 @@ async def toggle_favorite(
         return {"status": "removed"}
     else:
         conn.execute(
-            "INSERT INTO favorites (gallery_id, photo_id) VALUES (?, ?)",
-            (gallery["id"], photo_id)
+            "INSERT INTO favorites (gallery_id, photo_id, author) VALUES (?, ?, ?)",
+            (gallery["id"], photo_id, author)
         )
         conn.commit()
         conn.close()
@@ -284,7 +342,8 @@ async def add_comment(
     secure_hash: str,
     photo_id: int = Form(...),
     author: str = Form("Client"),
-    text: str = Form(...)
+    text: str = Form(...),
+    parent_id: int = Form(None)
 ):
     conn = get_db_conn()
     gallery = conn.execute("SELECT * FROM galleries WHERE secure_hash = ?", (secure_hash,)).fetchone()
@@ -294,8 +353,8 @@ async def add_comment(
         
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO comments (gallery_id, photo_id, author, text) VALUES (?, ?, ?, ?)",
-        (gallery["id"], photo_id, author, text)
+        "INSERT INTO comments (gallery_id, photo_id, author, text, parent_id) VALUES (?, ?, ?, ?, ?)",
+        (gallery["id"], photo_id, author, text, parent_id)
     )
     conn.commit()
     
@@ -311,13 +370,15 @@ async def add_comment(
         "comment_id": comment["id"],
         "author": comment["author"],
         "text": comment["text"],
+        "parent_id": comment["parent_id"],
         "timestamp": ts.strftime("%Y-%m-%d %H:%M")
     }
 
 @app.get("/gallery/{secure_hash}/download")
 async def download_gallery_photos(
     secure_hash: str,
-    download_type: str = "all" # "all" or "favorites"
+    download_type: str = "all", # "all" or "favorites"
+    pin: str = None
 ):
     conn = get_db_conn()
     gallery_row = conn.execute("SELECT * FROM galleries WHERE secure_hash = ?", (secure_hash,)).fetchone()
@@ -326,6 +387,14 @@ async def download_gallery_photos(
         return {"error": "Gallery not found"}
         
     gallery = dict(gallery_row)
+    
+    # Secure Download PIN Verification
+    if gallery.get("download_pin") and gallery["download_pin"].strip():
+        if not pin or pin.strip() != gallery["download_pin"].strip():
+            conn.close()
+            from fastapi import HTTPException
+            raise HTTPException(status_code=403, detail="Invalid Download PIN. Please contact the studio for access.")
+
     photos_rows = conn.execute("SELECT * FROM photos WHERE gallery_id = ?", (gallery["id"],)).fetchall()
     photos = [dict(p) for p in photos_rows]
     
@@ -343,9 +412,28 @@ async def download_gallery_photos(
     zip_buffer = BytesIO()
     with zipfile.ZipFile(zip_buffer, "a", zipfile.ZIP_DEFLATED, False) as zip_file:
         for photo in photos:
-            filepath = os.path.join(UPLOAD_DIR, str(gallery["id"]), photo["filename"])
-            if os.path.exists(filepath):
-                zip_file.write(filepath, photo["original_name"])
+            if photo["filename"].startswith("http"):
+                try:
+                    import urllib.request
+                    import ssl
+                    # Disable SSL verification for sample photos downloaded locally
+                    ssl_context = ssl.create_default_context()
+                    ssl_context.check_hostname = False
+                    ssl_context.verify_mode = ssl.CERT_NONE
+                    
+                    req = urllib.request.Request(
+                        photo["filename"], 
+                        headers={'User-Agent': 'Mozilla/5.0'}
+                    )
+                    with urllib.request.urlopen(req, timeout=5, context=ssl_context) as response:
+                        img_data = response.read()
+                        zip_file.writestr(photo["original_name"], img_data)
+                except Exception as e:
+                    print(f"Error downloading image {photo['filename']} for zip: {e}")
+            else:
+                filepath = os.path.join(UPLOAD_DIR, str(gallery["id"]), photo["filename"])
+                if os.path.exists(filepath):
+                    zip_file.write(filepath, photo["original_name"])
                 
     zip_buffer.seek(0)
     
@@ -452,6 +540,21 @@ async def admin_create_client(
         
     return RedirectResponse(url="/admin/dashboard", status_code=status.HTTP_303_SEE_OTHER)
 
+@app.post("/admin/clients/{id}/delete")
+async def admin_delete_client(
+    id: int,
+    admin: dict = Depends(get_current_admin)
+):
+    if not admin:
+        return RedirectResponse(url="/admin/login", status_code=status.HTTP_303_SEE_OTHER)
+        
+    conn = get_db_conn()
+    conn.execute("DELETE FROM clients WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
+    
+    return RedirectResponse(url="/admin/dashboard", status_code=status.HTTP_303_SEE_OTHER)
+
 @app.post("/admin/galleries/new")
 async def admin_create_gallery(
     title: str = Form(...),
@@ -459,6 +562,8 @@ async def admin_create_gallery(
     event_date: str = Form(None),
     is_private: bool = Form(False),
     client_id: int = Form(None),
+    download_pin: str = Form(None),
+    enable_watermark: bool = Form(True),
     admin: dict = Depends(get_current_admin)
 ):
     if not admin:
@@ -468,8 +573,8 @@ async def admin_create_gallery(
     conn = get_db_conn()
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO galleries (title, description, event_date, is_private, client_id, secure_hash) VALUES (?, ?, ?, ?, ?, ?)",
-        (title, description, event_date, 1 if is_private else 0, client_id, secure_hash)
+        "INSERT INTO galleries (title, description, event_date, is_private, client_id, secure_hash, download_pin, enable_watermark) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        (title, description, event_date, 1 if is_private else 0, client_id, secure_hash, download_pin, 1 if enable_watermark else 0)
     )
     conn.commit()
     gallery_id = cursor.lastrowid
@@ -483,6 +588,26 @@ async def admin_create_gallery(
         url=f"/admin/galleries/{gallery_id}/view", 
         status_code=status.HTTP_303_SEE_OTHER
     )
+
+@app.post("/admin/galleries/{id}/update-settings")
+async def admin_update_gallery_settings(
+    id: int,
+    download_pin: str = Form(None),
+    enable_watermark: bool = Form(False),
+    admin: dict = Depends(get_current_admin)
+):
+    if not admin:
+        return RedirectResponse(url="/admin/login", status_code=status.HTTP_303_SEE_OTHER)
+        
+    conn = get_db_conn()
+    conn.execute(
+        "UPDATE galleries SET download_pin = ?, enable_watermark = ? WHERE id = ?",
+        (download_pin, 1 if enable_watermark else 0, id)
+    )
+    conn.commit()
+    conn.close()
+    
+    return RedirectResponse(url=f"/admin/galleries/{id}/view", status_code=status.HTTP_303_SEE_OTHER)
 
 @app.post("/admin/galleries/{id}/assign-client")
 async def admin_assign_client(

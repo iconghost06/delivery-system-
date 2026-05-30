@@ -14,13 +14,13 @@
     </div>
 </div>
 
-<!-- Hero Banner -->
+<!-- Hero Banner - Brutalist Split Grid -->
 <div class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-content">
-        <h1>An Art of Observation</h1>
-        <p>Capture the soul, not just the smile. One of the best wedding and event photographers in Chennai, dedicating full attention to one wedding at a time.</p>
-        <div style="display: flex; gap: 1.5rem; justify-content: center; align-items: center;">
+    <div class="hero-text-block reveal-on-scroll">
+        <span class="brutalist-tag">AURA PHOTOGRAPHY PRO</span>
+        <h1 data-split-text>AN ART OF OBSERVATION</h1>
+        <p>Capture the soul, not just the smile. One of the premier wedding and event studios in Chennai, dedicating absolute focus to one wedding at a time.</p>
+        <div class="hero-buttons">
             <div class="magnetic-wrapper" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')">
                 <a href="/portfolio" class="btn btn-primary magnetic-link">View Portfolio</a>
             </div>
@@ -29,82 +29,122 @@
             </div>
         </div>
     </div>
-    
-    <!-- Scroll Down Indicator -->
-    <div class="scroll-indicator">
-        <svg width="30" height="50" viewBox="0 0 24 36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="5" y="3" width="14" height="30" rx="7" ry="7" style="stroke: var(--text-muted); opacity: 0.5;"></rect>
-            <line class="scroll-wheel" x1="12" y1="9" x2="12" y2="15" style="stroke: var(--primary);"></line>
-        </svg>
+    <div class="hero-image-block reveal-on-scroll" onmouseenter="setCursorState('view')" onmouseleave="setCursorState('normal')">
+        <img src="https://images.unsplash.com/photo-1603425013520-e0b30e6e37dc?auto=format&fit=crop&w=1600&q=80" alt="Hero Photography Story">
     </div>
 </div>
 
-<!-- Vision Section -->
-<section>
-    <div class="container" style="max-width: 900px; text-align: center;">
-        <h6 style="text-transform: uppercase; letter-spacing: 4px; font-size: 0.85rem; margin-bottom: 1.5rem; color: var(--primary);">Driven by Vision</h6>
-        <h2 style="font-size: 3rem; margin-bottom: 2rem; line-height: 1.2;">"Our vision has always been to capture one's soul, not just their smile."</h2>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; text-align: left; color: var(--text-secondary);">
-            <p>It has little to do with the things you see, and everything to do with how you see them. Reality may fade, but memories won't. We provide impeccable attention to details.</p>
-            <p>With our experience of documenting over 1,000 weddings, we make sure you get the best possible frames to remember your special day and cherish it forever.</p>
+<!-- Vision Section - Brutalist Split Row -->
+<section style="padding: 6.5rem 0;">
+    <div class="container">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;" class="reveal-on-scroll">
+            <div>
+                <span class="brutalist-tag">[01] Driven by Vision</span>
+                <h2 style="font-size: 3rem; line-height: 1.1; margin-bottom: 2rem;" data-split-text>"Our vision has always been to capture one's soul, not just their smile."</h2>
+            </div>
+            <div style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.6; display: flex; flex-direction: column; gap: 1.5rem;">
+                <p>It has little to do with the things you see, and everything to do with how you see them. Reality may fade, but memories won't. We provide impeccable attention to details.</p>
+                <p>With our experience of documenting over 1,000 weddings, we make sure you get the best possible frames to remember your special day and cherish it forever.</p>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- Services Highlights -->
-<section style="background-color: oklch(0.1 0.01 250);">
-    <div class="container">
-        <div class="section-header">
+<!-- Services Highlights - Strict 3-Cell Grid -->
+<section style="background-color: var(--bg-card); border-bottom: var(--border-thick); padding: 5rem 0 0 0;">
+    <div class="container" style="padding: 0;">
+        <div class="section-header" style="padding: 0 2rem 1.5rem 2rem; border-bottom: none; margin-bottom: 0;">
             <h2>Moments We Capture Best</h2>
             <p>Every event is special. We tailor our services to match the exact mood, aesthetic, and significance of your celebration.</p>
         </div>
-        
-        <div class="services-grid">
-            <div class="service-card grid-item" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')" style="padding: 2.5rem; text-align: left;">
+    </div>
+    
+    <div class="services-grid-brutalist reveal-on-scroll">
+        <div class="service-cell" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')">
+            <div>
+                <span class="brutalist-tag">Storytelling</span>
                 <h3>Wedding Stories</h3>
                 <p>Candid and traditional coverages that document real emotions, stolen glances, and celebrations.</p>
-                <div class="magnetic-wrapper" style="margin-top: 1.5rem;">
-                    <a href="/portfolio" class="magnetic-link" style="color: var(--primary); font-size: 0.85rem; font-weight: 600; display: inline-block;">Learn More &rarr;</a>
-                </div>
             </div>
-            <div class="service-card grid-item" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')" style="padding: 2.5rem; text-align: left;">
+            <div class="magnetic-wrapper" style="margin-top: 2rem;">
+                <a href="/portfolio" class="cell-link magnetic-link" style="color: var(--primary); font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; display: inline-block;">LEARN MORE &rarr;</a>
+            </div>
+        </div>
+        <div class="service-cell" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')">
+            <div>
+                <span class="brutalist-tag">Cinematic Reel</span>
                 <h3>Pre/Post-Weddings</h3>
                 <p>Beautiful cinematic outdoor sessions highlighting natural chemistry in scenic locations.</p>
-                <div class="magnetic-wrapper" style="margin-top: 1.5rem;">
-                    <a href="/portfolio" class="magnetic-link" style="color: var(--primary); font-size: 0.85rem; font-weight: 600; display: inline-block;">Learn More &rarr;</a>
+            </div>
+            <div class="magnetic-wrapper" style="margin-top: 2rem;">
+                <a href="/portfolio" class="cell-link magnetic-link" style="color: var(--primary); font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; display: inline-block;">LEARN MORE &rarr;</a>
+            </div>
+        </div>
+        <div class="service-cell" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')">
+            <div>
+                <span class="brutalist-tag">Fine Art Portrait</span>
+                <h3>Maternity & Baby</h3>
+                <p>Cherishing motherhood milestones with soft, warm, and memorable family photography.</p>
+            </div>
+            <div class="magnetic-wrapper" style="margin-top: 2rem;">
+                <a href="/portfolio" class="cell-link magnetic-link" style="color: var(--primary); font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; display: inline-block;">LEARN MORE &rarr;</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Live Client Proofing Showcase Section -->
+<section style="background-color: var(--bg-dark); border-top: var(--border-thick); border-bottom: var(--border-thick); padding: 6.5rem 0;" class="reveal-on-scroll">
+    <div class="container">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
+            <div class="reveal-on-scroll" style="position: relative; border: 2px solid var(--text-primary); background: var(--bg-card); overflow: hidden; height: 350px;">
+                <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800" alt="Client Proofing Demo" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.85); transition: var(--transition-smooth);" onmouseenter="this.style.transform='scale(1.05)'" onmouseleave="this.style.transform='scale(1)'">
+                <div style="position: absolute; top: 20px; left: 20px; background: var(--primary); color: var(--bg-dark); font-family: var(--font-mono); font-weight: 700; font-size: 0.75rem; padding: 0.25rem 0.75rem; border: 1px solid var(--text-primary);">LIVE DEMO GALLERY</div>
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); padding: 2rem; border-top: 1px solid rgba(255,255,255,0.15);">
+                    <h3 style="margin: 0 0 0.5rem 0; font-size: 1.5rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">Sanjay & Priya</h3>
+                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);">Eternal Harmony &bull; Event Date: May 18, 2026</p>
                 </div>
             </div>
-            <div class="service-card grid-item" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')" style="padding: 2.5rem; text-align: left;">
-                <h3>Maternity & Baby Showers</h3>
-                <p>Cherishing motherhood milestones with soft, warm, and memorable family photography.</p>
-                <div class="magnetic-wrapper" style="margin-top: 1.5rem;">
-                    <a href="/portfolio" class="magnetic-link" style="color: var(--primary); font-size: 0.85rem; font-weight: 600; display: inline-block;">Learn More &rarr;</a>
+            
+            <div>
+                <span class="brutalist-tag">[02] Interactive Delivery</span>
+                <h2 style="font-size: 3rem; line-height: 1.1; margin-bottom: 2rem;" data-split-text>COMMERCIAL CLIENT PROOFING</h2>
+                <div style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.6; display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2.5rem;">
+                    <p>Experience how we deliver high-resolution artbooks to our clients. Log in or view a secure live gallery with features like dynamic photographer watermarking, 4-digit download PIN protection, multi-proofer favorites selection, and real-time threaded design notes.</p>
+                </div>
+                <div class="hero-buttons">
+                    <div class="magnetic-wrapper" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')">
+                        <a href="/gallery/sanjay_priya" class="btn btn-primary magnetic-link">Launch Live Demo</a>
+                    </div>
+                    <div class="magnetic-wrapper" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')">
+                        <a href="/client/login" class="btn btn-outline magnetic-link">Client Portal Login</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Testimonials -->
-<section>
+<!-- Testimonials - Flat Solid Grid Border Overlay -->
+<section style="padding: 6.5rem 0;" class="reveal-on-scroll">
     <div class="container">
         <div class="section-header">
-            <h2>What Clients Say</h2>
+            <h2 data-split-text>What Clients Say</h2>
             <p>Real stories and reviews from couples who trusted us with their special moments.</p>
         </div>
         
-        <div class="testimonials-grid">
-            <div class="testimonial-card">
-                <p>"The team was incredibly professional and patient. They captured photos that we didn't even notice were being taken—real smiles, raw emotions. Absolutely love the album!"</p>
-                <div class="testimonial-author">Prashanth & Ananya - Wedding</div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background-color: var(--text-primary); border: 2px solid var(--text-primary);" class="reveal-on-scroll">
+            <div style="background-color: var(--bg-dark); padding: 3.5rem 2.5rem; display: flex; flex-direction: column; justify-content: space-between; min-height: 280px;">
+                <p style="font-style: italic; font-size: 1rem; line-height: 1.6; color: var(--text-secondary);">"The team was incredibly professional and patient. They captured photos that we didn't even notice were being taken—real smiles, raw emotions. Absolutely love the album!"</p>
+                <div style="font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--primary); margin-top: 2.5rem; text-transform: uppercase;">Prashanth & Ananya</div>
             </div>
-            <div class="testimonial-card">
-                <p>"Best decision we made for our wedding. The candid photos are stunning, and the page-turn transitions in the physical album they designed are beautiful heirloom quality."</p>
-                <div class="testimonial-author">Vijay & Shruti - Wedding Story</div>
+            <div style="background-color: var(--bg-dark); padding: 3.5rem 2.5rem; display: flex; flex-direction: column; justify-content: space-between; min-height: 280px;">
+                <p style="font-style: italic; font-size: 1rem; line-height: 1.6; color: var(--text-secondary);">"Best decision we made for our wedding. The candid photos are stunning, and the page-turn transitions in the physical album they designed are beautiful heirloom quality."</p>
+                <div style="font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--primary); margin-top: 2.5rem; text-transform: uppercase;">Vijay & Shruti</div>
             </div>
-            <div class="testimonial-card">
-                <p>"Outstanding outdoor shoot quality. They made us feel super comfortable, and the final picture editing was incredibly subtle and natural."</p>
-                <div class="testimonial-author">Karthik & Divya - Pre-Wedding</div>
+            <div style="background-color: var(--bg-dark); padding: 3.5rem 2.5rem; display: flex; flex-direction: column; justify-content: space-between; min-height: 280px;">
+                <p style="font-style: italic; font-size: 1rem; line-height: 1.6; color: var(--text-secondary);">"Outstanding outdoor shoot quality. They made us feel super comfortable, and the final picture editing was incredibly subtle and natural."</p>
+                <div style="font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--primary); margin-top: 2.5rem; text-transform: uppercase;">Karthik & Divya</div>
             </div>
         </div>
     </div>

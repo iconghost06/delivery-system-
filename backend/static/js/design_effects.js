@@ -49,6 +49,24 @@ window.setCursorState = function(state) {
     }
 };
 
+// Automatically track hover states on interactive elements globally
+document.addEventListener('mouseover', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+        setCursorState('normal');
+        return;
+    }
+    const interactive = e.target.closest('a, button, [role="button"], .shutter-btn, .action-icon, .portfolio-cell, .gallery-item img');
+    if (interactive) {
+        if (interactive.classList.contains('portfolio-cell') || (interactive.tagName === 'IMG' && interactive.closest('.portfolio-cell, .gallery-item'))) {
+            setCursorState('view');
+        } else {
+            setCursorState('hover');
+        }
+    } else {
+        setCursorState('normal');
+    }
+});
+
 
 // 2. Magnetic Nav Links Effect
 const magneticLinks = document.querySelectorAll('.magnetic-link');
@@ -69,13 +87,10 @@ magneticLinks.forEach(link => {
 });
 
 
-// 3. Liquid Gooey Navbar Background Indicator
+// 3. Brutalist Navbar Background Indicator
 const navBar = document.querySelector('nav');
 const navBlob = document.getElementById('navBlob');
 const navLinks = document.querySelectorAll('.nav-link');
-
-let currentLeft = 0;
-let currentWidth = 0;
 
 if (navBar && navBlob) {
     navLinks.forEach(link => {
@@ -85,38 +100,8 @@ if (navBar && navBlob) {
             const newLeft = rect.left - navRect.left;
             const newWidth = rect.width;
             
-            if (currentWidth > 0) {
-                const deltaX = newLeft - currentLeft;
-                const absDeltaX = Math.abs(deltaX);
-                
-                if (absDeltaX > 15) {
-                    // Calculate dynamic stretch magnitude based on hover distance
-                    const stretch = Math.min(absDeltaX * 0.35, 75);
-                    navBlob.style.width = `${currentWidth + stretch}px`;
-                    
-                    // Offset left offset so it expands forward/backward organically
-                    if (deltaX < 0) {
-                        navBlob.style.left = `${newLeft}px`;
-                    } else {
-                        navBlob.style.left = `${currentLeft}px`;
-                    }
-                    
-                    // Snap to final dimensions on target finish
-                    setTimeout(() => {
-                        navBlob.style.left = `${newLeft}px`;
-                        navBlob.style.width = `${newWidth}px`;
-                    }, 120);
-                } else {
-                    navBlob.style.left = `${newLeft}px`;
-                    navBlob.style.width = `${newWidth}px`;
-                }
-            } else {
-                navBlob.style.left = `${newLeft}px`;
-                navBlob.style.width = `${newWidth}px`;
-            }
-            
-            currentLeft = newLeft;
-            currentWidth = newWidth;
+            navBlob.style.left = `${newLeft}px`;
+            navBlob.style.width = `${newWidth}px`;
             navBlob.style.opacity = '1';
         });
     });
@@ -124,8 +109,6 @@ if (navBar && navBlob) {
     // Hide blob when user stops hovering nav links
     navBar.addEventListener('mouseleave', () => {
         navBlob.style.opacity = '0';
-        currentLeft = 0;
-        currentWidth = 0;
     });
 }
 
@@ -143,12 +126,15 @@ window.showLensPreview = function(imageId, element) {
 
 
 // 5. Aperture Client Login Menu Toggle
-window.toggleShutterMenu = function() {
-    const container = document.getElementById('shutterMenuContainer');
-    if (container) {
-        container.classList.toggle('active');
-    }
-};
+const shutterBtn = document.querySelector('.shutter-btn');
+const shutterContainer = document.getElementById('shutterMenuContainer');
+
+if (shutterBtn && shutterContainer) {
+    shutterBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        shutterContainer.classList.toggle('active');
+    });
+}
 
 // Close Shutter Menu if clicked outside
 document.addEventListener('click', (e) => {
@@ -158,39 +144,66 @@ document.addEventListener('click', (e) => {
     }
 });
 
+// 6. IntersectionObserver Scroll Entrance Reveal Fallback (Firefox, older Safari)
+if (!CSS.supports('(animation-timeline: view()) and (animation-range: entry)')) {
+    const revealOnScrollElements = document.querySelectorAll('.reveal-on-scroll');
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+            }
+        });
+    }, { threshold: 0.1 });
 
-// 6. Asymmetric Editorial Grid Hover Tilt & Lift
-const gridItems = document.querySelectorAll('.grid-item');
-gridItems.forEach(item => {
-    item.addEventListener('mousemove', (e) => {
-        const rect = item.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
+    revealOnScrollElements.forEach(el => {
+        revealObserver.observe(el);
         
-        // Find percentage offset from center
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        
-        // Max tilt of 8 degrees in X and Y planes
-        const rotateY = ((mouseX - centerX) / centerX) * 8;
-        const rotateX = ((centerY - mouseY) / centerY) * 8;
-        
-        item.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-        
-        // Push the inner descriptive overlay in matching perspective direction
-        const overlay = item.querySelector('.item-overlay');
-        if (overlay) {
-            overlay.style.transform = `translate3d(${rotateY * 1.5}px, ${-rotateX * 1.5}px, 20px)`;
+        // Check if element is already in viewport on load
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+            el.classList.add('revealed');
         }
     });
+}
+
+// 7. Split Text Animation Initializer & Observer
+const splitTextElements = document.querySelectorAll('[data-split-text]');
+splitTextElements.forEach(el => {
+    const htmlContent = el.innerHTML.trim();
+    const lines = htmlContent.split(/<br\s*\/?>/i);
+    el.innerHTML = '';
     
-    item.addEventListener('mouseleave', () => {
-        // Reset transformation elements smoothly
-        item.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+    lines.forEach((line, lineIdx) => {
+        const lineDiv = document.createElement('div');
+        lineDiv.style.overflow = 'hidden';
+        lineDiv.style.display = 'block';
         
-        const overlay = item.querySelector('.item-overlay');
-        if (overlay) {
-            overlay.style.transform = 'translate3d(0, 0, 0)';
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = line;
+        const text = tempDiv.textContent || tempDiv.innerText || '';
+        
+        [...text].forEach((char, charIdx) => {
+            const span = document.createElement('span');
+            span.textContent = char === ' ' ? '\u00A0' : char;
+            span.style.transitionDelay = `${(lineIdx * 10 + charIdx) * 0.02}s`;
+            lineDiv.appendChild(span);
+        });
+        
+        el.appendChild(lineDiv);
+        if (lineIdx < lines.length - 1) {
+            el.appendChild(document.createElement('br'));
         }
     });
+
+    const splitObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-split');
+                splitObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.05 });
+
+    splitObserver.observe(el);
 });
+

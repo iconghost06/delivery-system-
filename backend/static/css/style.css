@@ -1,53 +1,63 @@
 /* ==========================================================================
-   AURA PHOTOGRAPHY - PREMIUM DESIGN SYSTEM
+   AURA PHOTOGRAPHY - BRUTALIST MINIMALIST GRID DESIGN SYSTEM
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 :root {
-    /* Color Tokens (Light Mode defaults) */
-    --bg-dark: oklch(0.98 0.005 250); /* soft cream white */
-    --bg-card: oklch(0.95 0.005 250); /* soft card background */
-    --bg-card-hover: oklch(0.9 0.01 250);
+    /* Color Tokens (Warm Beige, Terracotta & Cream) */
+    --bg-dark: #fbf9f4;       /* Soft linen cream background */
+    --bg-card: #f4f0e6;       /* Warm oat beige panels */
+    --bg-card-hover: #eae4d5; /* Sandstone hover */
     
-    --primary: oklch(0.68 0.16 150); /* Emerald Green Accent */
-    --primary-light: oklch(0.78 0.12 150);
-    --accent: oklch(0.62 0.22 30);   /* Warm terracotta/coral */
+    --primary: #b85a38;       /* Terracotta sienna accent */
+    --primary-light: #cf704c;
+    --accent: #4a685a;        /* Forest green highlights */
     
-    --text-primary: oklch(0.12 0.015 250); /* dark text */
-    --text-secondary: oklch(0.35 0.015 250);
-    --text-muted: oklch(0.55 0.01 250);
+    --text-primary: #1e1b15;  /* Deep warm espresso */
+    --text-secondary: #5a5345;/* Warm taupe */
+    --text-muted: #928670;    /* Sand */
     
-    --border-color: oklch(0.85 0.01 250);
-    --border-hover: oklch(0.75 0.01 250);
+    --border-color: #e2dcd0;  /* Light clay grid lines */
+    --border-hover: #c4bba9;
+    
+    /* Grid Borders */
+    --border-thick: 2px solid var(--text-primary);
+    --border-thin: 1px solid var(--border-color);
     
     /* Typography */
-    --font-heading: 'Playfair Display', serif;
-    --font-body: 'Libre Franklin', sans-serif;
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --font-mono: 'Space Mono', monospace;
     
-    /* Transitions & Shadow */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --shadow-soft: 0 4px 30px rgba(0, 0, 0, 0.05);
-    --glass-bg: rgba(255, 255, 255, 0.7);
-    --glass-blur: blur(12px);
+    /* Snappy Transitions */
+    --transition-smooth: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-snappy: all 0.1s cubic-bezier(0.16, 1, 0.3, 1);
+    --shadow-soft: 4px 4px 0px rgba(30, 27, 21, 0.15);
+    --glass-bg: rgba(251, 249, 244, 0.85);
+    --glass-blur: blur(8px);
 }
 
-/* Dark Mode overrides */
+/* Dark Mode overrides - Rich Warm Espresso Cocoa */
 @media (prefers-color-scheme: dark) {
     :root {
-        --bg-dark: oklch(0.12 0.015 250); /* dark charcoal */
-        --bg-card: oklch(0.18 0.02 250);
-        --bg-card-hover: oklch(0.22 0.02 250);
+        --bg-dark: #1e1a14;       /* Rich dark espresso chocolate */
+        --bg-card: #28231c;       /* Rich cocoa */
+        --bg-card-hover: #352e25; /* Warm mud */
         
-        --text-primary: oklch(0.95 0.005 250); /* light text */
-        --text-secondary: oklch(0.75 0.01 250);
-        --text-muted: oklch(0.55 0.01 250);
+        --text-primary: #f7f4ed;  /* Warm cream */
+        --text-secondary: #c8beb0;/* Light linen beige */
+        --text-muted: #8e8170;    /* Sand */
         
-        --border-color: oklch(0.26 0.015 250);
-        --border-hover: oklch(0.36 0.02 250);
+        --border-color: #3e362c;  /* Dark clay border */
+        --border-hover: #584d3f;
         
-        --shadow-soft: 0 4px 30px rgba(0, 0, 0, 0.3);
-        --glass-bg: rgba(18, 20, 24, 0.7);
+        --primary: #d77855;       /* Soft sienna */
+        --primary-light: #e69171;
+        --accent: #739282;        /* Soft sage green */
+        
+        --shadow-soft: 4px 4px 0px rgba(0, 0, 0, 0.5);
+        --glass-bg: rgba(30, 26, 20, 0.85);
     }
 }
 
@@ -70,16 +80,16 @@ body {
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
 }
 ::-webkit-scrollbar-track {
     background: var(--bg-dark);
+    border-left: var(--border-thin);
 }
 ::-webkit-scrollbar-thumb {
-    background: var(--border-color);
-    border-radius: 4px;
-    transition: var(--transition-smooth);
+    background: var(--text-muted);
+    border: 2px solid var(--bg-dark);
 }
 ::-webkit-scrollbar-thumb:hover {
     background: var(--primary);
@@ -88,37 +98,37 @@ body {
 a {
     color: inherit;
     text-decoration: none;
-    transition: var(--transition-smooth);
+    transition: var(--transition-snappy);
 }
 
 /* Heading Typography */
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
-    font-weight: 500;
-    letter-spacing: -0.02em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
 }
 
 /* Container */
 .container {
-    max-width: 1200px;
+    max-width: 1300px;
     margin: 0 auto;
     padding: 0 2rem;
 }
 
-/* Glass Header */
+/* Brutalist Header (Rigid grid panel instead of rounded floating capsule) */
 header {
     position: fixed;
-    top: 1.25rem;
-    left: 2rem;
-    right: 2rem;
-    width: calc(100% - 4rem);
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
     z-index: 100;
     background: var(--glass-bg);
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--border-color);
-    border-radius: 100px;
-    box-shadow: var(--shadow-soft);
+    border-bottom: 2px solid var(--text-primary);
+    box-shadow: none;
     transition: var(--transition-smooth);
 }
 
@@ -126,7 +136,9 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 60px;
+    height: 70px;
+    padding: 0 2rem;
+    max-width: 100%;
 }
 
 .logo {
@@ -134,9 +146,11 @@ header {
     align-items: center;
     gap: 0.75rem;
     font-family: var(--font-heading);
-    font-size: 1.5rem;
-    font-weight: 700;
+    font-size: 1.4rem;
+    font-weight: 800;
     color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .logo img {
@@ -145,92 +159,151 @@ header {
 
 nav {
     display: flex;
-    gap: 1.5rem;
+    align-items: center;
+    gap: 0;
+    height: 100%;
+}
+
+.magnetic-wrapper {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    border-left: var(--border-thin);
 }
 
 .nav-link {
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-    padding: 0.5rem 0;
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0 1.5rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
     position: relative;
+    transition: var(--transition-snappy);
 }
 
 .nav-link:hover, .nav-link.active {
-    color: var(--primary);
+    color: var(--bg-dark) !important;
+    background-color: var(--primary);
 }
 
 .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background-color: var(--primary);
-    transition: var(--transition-smooth);
+    display: none; /* Hide the underline animation of previous theme */
 }
 
-.nav-link:hover::after, .nav-link.active::after {
-    width: 100%;
-}
-
-/* Hero Section */
+/* Hero Section - Brutalist Split Grid */
 .hero {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    min-height: calc(100vh - 70px);
+    margin-top: 70px;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
     position: relative;
     overflow: hidden;
-    text-align: center;
+    border-bottom: var(--border-thick);
 }
 
 .hero-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom, rgba(18,20,24,0.3) 0%, rgba(18,20,24,0.85) 100%),
-                url('https://images.unsplash.com/photo-1603425013520-e0b30e6e37dc?auto=format&fit=crop&w=1600&q=80') no-repeat center center/cover;
-    z-index: -1;
+    display: none; /* Removed background cover */
 }
 
-.hero-content h1 {
-    font-size: 4rem;
+.hero-text-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem;
+    background: var(--bg-dark);
+    text-align: left;
+    border-right: var(--border-thick);
+}
+
+.brutalist-tag {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 1.5rem;
+    display: block;
+}
+
+.hero-text-block h1 {
+    font-size: 4.5rem;
+    line-height: 0.95;
     margin-bottom: 1.5rem;
     color: var(--text-primary);
-    opacity: 0;
-    animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1) 2.2s forwards;
+    font-weight: 800;
 }
 
-.hero-content p {
-    font-size: 1.25rem;
+.hero-text-block p {
+    font-size: 1.1rem;
     color: var(--text-secondary);
-    margin-bottom: 2rem;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-    opacity: 0;
-    animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1) 2.5s forwards;
+    margin-bottom: 2.5rem;
+    max-width: 550px;
+    line-height: 1.5;
 }
 
-.hero-content > div {
-    opacity: 0;
-    animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1) 2.8s forwards;
+.hero-buttons {
+    display: flex;
+    gap: 1.5rem;
 }
 
-.btn {
-    display: inline-block;
-    padding: 0.8rem 2rem;
-    font-family: var(--font-body);
-    font-weight: 600;
-    font-size: 0.95rem;
-    border-radius: 4px;
-    cursor: pointer;
+.hero-image-block {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg-card);
+}
+
+.hero-image-block img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
     transition: var(--transition-smooth);
-    border: none;
+}
+
+.hero-image-block:hover img {
+    transform: scale(1.02);
+}
+
+@media (max-width: 900px) {
+    .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+    .hero-text-block {
+        border-right: none;
+        border-bottom: var(--border-thick);
+        padding: 3rem 1.5rem;
+    }
+    .hero-text-block h1 {
+        font-size: 3rem;
+    }
+    .hero-image-block {
+        height: 50vh;
+    }
+}
+
+/* Brutalist Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.8rem 2rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.85rem;
+    border-radius: 0;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: var(--transition-snappy);
+    border: 2px solid var(--text-primary);
 }
 
 .btn-primary {
@@ -240,118 +313,181 @@ nav {
 
 .btn-primary:hover {
     background-color: var(--primary-light);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(108, 194, 74, 0.4);
+    transform: translate(-3px, -3px);
+    box-shadow: 4px 4px 0px var(--text-primary);
 }
 
 .btn-outline {
     background-color: transparent;
-    border: 1px solid var(--text-primary);
     color: var(--text-primary);
 }
 
 .btn-outline:hover {
     background-color: var(--text-primary);
     color: var(--bg-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(255, 255, 255, 0.05);
+    transform: translate(-3px, -3px);
+    box-shadow: 4px 4px 0px var(--primary);
 }
 
 /* Sections */
 section {
-    padding: 6rem 0;
-    border-bottom: 1px solid var(--border-color);
+    padding: 5rem 0;
+    border-bottom: var(--border-thick);
 }
 
 .section-header {
-    text-align: center;
-    margin-bottom: 4rem;
+    text-align: left;
+    margin-bottom: 3.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: var(--border-thin);
+    padding-bottom: 1.5rem;
 }
 
 .section-header h2 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
+    font-size: 2.2rem;
+    line-height: 1.1;
 }
 
 .section-header p {
     color: var(--text-secondary);
     max-width: 500px;
-    margin: 0 auto;
+    font-size: 0.95rem;
+    text-align: right;
 }
 
-/* Grid Layouts */
-.services-grid {
+/* Grid Layouts - Brutalist 3-Column Services */
+.services-grid-brutalist {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: var(--border-thick);
+    border-bottom: var(--border-thick);
 }
 
-.service-card {
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
-    padding: 2.5rem 2rem;
-    border-radius: 6px;
-    transition: var(--transition-smooth);
-    text-align: left;
+.service-cell {
+    padding: 3.5rem 2.5rem;
+    border-right: var(--border-thin);
+    background-color: var(--bg-dark);
+    transition: var(--transition-snappy);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-.service-card:hover {
-    border-color: var(--primary);
-    transform: translateY(-8px);
-    background-color: var(--bg-card-hover);
-    box-shadow: var(--shadow-soft);
+.service-cell:last-child {
+    border-right: none;
 }
 
-.service-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
+.service-cell h3 {
+    font-size: 1.6rem;
+    margin-bottom: 1.25rem;
 }
 
-.service-card p {
+.service-cell p {
     color: var(--text-secondary);
     font-size: 0.95rem;
+    line-height: 1.5;
 }
 
-/* Masonry / Portfolio Grid */
-.portfolio-grid {
+.service-cell:hover {
+    background-color: var(--primary);
+    color: var(--bg-dark);
+}
+
+.service-cell:hover p {
+    color: var(--bg-dark);
+}
+
+.service-cell:hover .cell-link {
+    color: var(--bg-dark) !important;
+}
+
+@media (max-width: 900px) {
+    .services-grid-brutalist {
+        grid-template-columns: 1fr;
+    }
+    .service-cell {
+        border-right: none;
+        border-bottom: var(--border-thin);
+        padding: 2.5rem 1.5rem;
+    }
+    .service-cell:last-child {
+        border-bottom: none;
+    }
+}
+
+/* Brutalist Grid Portfolio */
+.portfolio-grid-brutalist {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: var(--border-thick);
+    border-left: var(--border-thick);
 }
 
-.portfolio-item {
+.portfolio-cell {
     position: relative;
-    border-radius: 6px;
     overflow: hidden;
-    aspect-ratio: 4/5;
+    aspect-ratio: 1/1;
+    border-right: var(--border-thick);
+    border-bottom: var(--border-thick);
     background-color: var(--bg-card);
 }
 
-.portfolio-item img {
+.portfolio-cell img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: var(--transition-smooth);
-    loading: lazy;
+    display: block;
+    filter: grayscale(100%);
+    transition: filter 0.3s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.portfolio-item:hover img {
-    transform: scale(1.05);
+.portfolio-cell:hover img {
+    filter: grayscale(0%);
+    transform: scale(1.03);
 }
 
-.portfolio-overlay {
+.portfolio-overlay-brutalist {
     position: absolute;
-    top: 0;
+    bottom: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to top, rgba(18,20,24,0.95) 0%, rgba(18,20,24,0.1) 100%);
-    opacity: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 2rem;
-    transition: var(--transition-smooth);
+    right: 0;
+    background: var(--primary);
+    color: var(--bg-dark);
+    border-top: var(--border-thick);
+    padding: 1.25rem 1.5rem;
+    transform: translateY(100%);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 10;
+}
+
+.portfolio-cell:hover .portfolio-overlay-brutalist {
+    transform: translateY(0);
+}
+
+.portfolio-overlay-brutalist h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.portfolio-overlay-brutalist p {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+}
+
+@media (max-width: 900px) {
+    .portfolio-grid-brutalist {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .portfolio-grid-brutalist {
+        grid-template-columns: 1fr;
+    }
 }
 
 .portfolio-item:hover .portfolio-overlay {
@@ -634,7 +770,7 @@ textarea.form-control {
 
 /* Footer */
 footer {
-    background-color: oklch(0.08 0.01 250);
+    background-color: #0d0f0e;
     padding: 4rem 0;
     border-top: 1px solid var(--border-color);
     color: var(--text-secondary);
@@ -806,7 +942,7 @@ footer {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: oklch(0.08 0.01 250); /* deep carbon dark background */
+    background-color: var(--bg-dark); /* deep carbon dark background */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -897,55 +1033,94 @@ body::before {
 
 /* Custom Interactive Cursor Follower */
 @media (hover: hover) {
-    body {
-        cursor: none; /* Hide default cursor on desktop hover devices */
+    body.custom-cursor-active {
+        cursor: none; /* Hide default cursor on desktop hover devices only on public/client pages */
     }
     
-    a, button, input, select, textarea, [role="button"], .shutter-btn {
+    body.custom-cursor-active a, 
+    body.custom-cursor-active button, 
+    body.custom-cursor-active [role="button"], 
+    body.custom-cursor-active .shutter-btn, 
+    body.custom-cursor-active .action-icon {
         cursor: none;
     }
     
     .cursor-dot {
-        width: var(--cursor-size);
-        height: var(--cursor-size);
-        background-color: var(--text-primary);
+        width: 24px;
+        height: 24px;
+        background-color: var(--primary); /* Neon green */
+        border: 2px solid var(--bg-dark); /* Crisp dark outline */
+        box-shadow: 0 0 10px var(--primary);
         border-radius: 50%;
         position: fixed;
         transform: translate(-50%, -50%);
         pointer-events: none;
         z-index: 10000;
-        mix-blend-mode: difference;
-        transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
-                    height 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
-                    background-color 0.3s ease,
-                    border 0.3s ease;
         display: flex;
         align-items: center;
         justify-content: center;
         font-family: var(--font-mono);
         font-size: 0.65rem;
         font-weight: 700;
-        color: transparent;
+        color: var(--bg-dark);
         text-transform: uppercase;
-        letter-spacing: 0.1em;
+        letter-spacing: 0.05em;
         white-space: nowrap;
+        transition: width 0.15s cubic-bezier(0.19, 1, 0.22, 1), 
+                    height 0.15s cubic-bezier(0.19, 1, 0.22, 1), 
+                    border-radius 0.15s ease,
+                    background-color 0.15s ease;
+    }
+    
+    /* Target design crosshairs */
+    .cursor-dot::before {
+        content: "";
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border: 1.5px solid var(--bg-dark);
+        border-radius: 50%;
+        transition: all 0.15s ease;
+    }
+    .cursor-dot::after {
+        content: "";
+        position: absolute;
+        width: 1px;
+        height: 16px;
+        background-color: var(--bg-dark);
+        transition: all 0.15s ease;
     }
     
     .cursor-dot.hover {
-        width: 48px;
-        height: 48px;
-        background-color: transparent;
-        border: 1px solid var(--primary);
-        mix-blend-mode: normal;
+        width: 38px;
+        height: 38px;
+        border-radius: 0; /* Square on hover - brutalist! */
+        background-color: var(--primary);
+        box-shadow: 0 0 15px var(--primary);
+    }
+    
+    .cursor-dot.hover::before {
+        width: 14px;
+        height: 14px;
+        border-radius: 0;
+    }
+    
+    .cursor-dot.hover::after {
+        height: 24px;
     }
     
     .cursor-dot.view {
-        width: 72px;
-        height: 72px;
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
         background-color: var(--primary);
-        border: none;
-        mix-blend-mode: normal;
         color: var(--bg-dark);
+        font-size: 0.75rem;
+        font-weight: 800;
+    }
+    
+    .cursor-dot.view::before, .cursor-dot.view::after {
+        display: none;
     }
 }
 
@@ -960,18 +1135,19 @@ body::before {
     position: relative;
     z-index: 2;
     display: inline-block;
+    height: 100%;
 }
 
 .magnetic-link {
     transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* Liquid Gooey Navbar Background Indicator */
+/* Navbar Slider Indicator */
 nav {
     position: relative;
     display: flex;
     align-items: center;
-    border-radius: 40px;
+    border-radius: 0;
 }
 
 .gooey-blob {
@@ -979,15 +1155,15 @@ nav {
     top: 0px;
     left: 0px;
     height: 100%;
-    background-color: rgba(var(--primary), 0.15); /* Tint of Emerald Green */
-    background: color-mix(in oklch, var(--primary) 15%, transparent);
-    border-radius: 20px;
+    background-color: var(--primary);
+    border-radius: 0; /* Sharp rigid rectangles for Brutalist */
     z-index: 1;
     opacity: 0;
     pointer-events: none;
-    transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1),
-                left 0.4s cubic-bezier(0.25, 1, 0.5, 1),
-                opacity 0.3s ease;
+    mix-blend-mode: difference;
+    transition: width 0.2s cubic-bezier(0.25, 1, 0.5, 1),
+                left 0.2s cubic-bezier(0.25, 1, 0.5, 1),
+                opacity 0.15s ease;
 }
 
 .logo-icon {
@@ -996,21 +1172,21 @@ nav {
 
 .lens-pic {
     opacity: 0;
-    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 0.3s ease;
 }
 
 .lens-pic.active {
     opacity: 1;
 }
 
-/* Asymmetric Editorial Grid Hover Tilt & Lift */
+/* Brutalist Grid Item Snap Effects */
 .grid-item {
     position: relative;
     overflow: hidden;
-    border-radius: 12px;
-    background-color: rgba(255, 255, 255, 0.02);
-    border: 1px solid var(--border-color);
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: 0; /* Sharp corners */
+    background-color: var(--bg-card);
+    border: 2px solid var(--text-primary);
+    transition: var(--transition-snappy);
     will-change: transform;
 }
 
@@ -1019,12 +1195,16 @@ nav {
     height: auto;
     display: block;
     object-fit: cover;
-    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1),
-                filter 0.6s ease;
+    transition: transform 0.4s ease;
 }
 
 .grid-item:hover img {
-    transform: scale(1.04);
+    transform: scale(1.02);
+}
+
+.grid-item:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 6px 6px 0 var(--primary);
 }
 
 .frame-label {
@@ -1044,12 +1224,11 @@ nav {
     left: 0;
     width: 100%;
     padding: 30px;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0) 100%);
     color: #fff;
     opacity: 0;
     transform: translateY(10px);
-    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 0.3s ease, transform 0.3s ease;
     z-index: 10;
 }
 
@@ -1062,18 +1241,18 @@ nav {
     font-family: var(--font-heading);
     font-size: 1.5rem;
     margin-bottom: 6px;
-    font-weight: 400;
+    font-weight: 700;
 }
 
 .item-overlay p {
     font-family: var(--font-mono);
     font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.75);
     letter-spacing: 0.05em;
     text-transform: uppercase;
 }
 
-/* Shutter Client Login Portal */
+/* Shutter Client Login Portal Dropdown */
 .shutter-login-container {
     position: relative;
     display: inline-block;
@@ -1082,53 +1261,462 @@ nav {
 .shutter-btn {
     width: 38px;
     height: 38px;
-    border-radius: 50%;
-    border: 1px solid var(--border-color);
+    border-radius: 0; /* Sharp corner button */
+    border: 2px solid var(--text-primary);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: var(--text-secondary);
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-                color 0.3s ease,
-                border-color 0.3s ease;
+    color: var(--text-primary);
+    background-color: var(--bg-dark);
+    transition: var(--transition-snappy);
 }
 
 .shutter-btn:hover {
     transform: rotate(90deg);
-    color: var(--primary);
+    color: var(--bg-dark);
+    background-color: var(--primary);
     border-color: var(--primary);
 }
 
 .shutter-login-container.active .shutter-btn {
     transform: rotate(135deg);
-    color: var(--accent);
+    color: var(--bg-dark);
+    background-color: var(--accent);
     border-color: var(--accent);
 }
 
 .shutter-menu-panel {
     position: absolute;
-    top: calc(100% + 16px);
+    top: 70px;
     right: 0;
     width: 280px;
     padding: 24px;
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--border-color);
-    border-radius: 18px;
-    box-shadow: var(--shadow-soft);
+    background: var(--bg-dark);
+    border: 2px solid var(--text-primary);
+    border-radius: 0; /* Flat brutalist box */
+    box-shadow: 6px 6px 0 var(--text-primary);
     opacity: 0;
-    transform: translateY(10px) scale(0.95);
+    visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(10px);
+    transition: var(--transition-snappy);
     z-index: 1000;
 }
 
 .shutter-login-container.active .shutter-menu-panel {
+    opacity: 1 !important;
+}
+
+/* ==========================================================================
+   6. ADVANCED PROOFING SYSTEM STYLES (BRUTALIST COMMERCIAL)
+   ========================================================================== */
+
+/* Diagonal Proof Watermarks */
+.watermark-container {
+    position: relative;
+}
+
+.watermark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.watermark-text {
+    font-family: var(--font-mono);
+    font-weight: 800;
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.15); /* Soft translucent white overlay */
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    transform: rotate(-30deg);
+    white-space: nowrap;
+    user-select: none;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+/* Watermark in Lightbox */
+.lightbox-watermark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1005;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lightbox-watermark-text {
+    font-family: var(--font-mono);
+    font-weight: 900;
+    font-size: 3rem;
+    color: rgba(255, 255, 255, 0.12);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    transform: rotate(-35deg);
+    white-space: nowrap;
+    user-select: none;
+}
+
+/* Download PIN Verification Modal */
+.pin-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    z-index: 2000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.pin-modal-content {
+    background-color: var(--bg-dark);
+    border: 2px solid var(--text-primary);
+    padding: 3rem;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 8px 8px 0px var(--text-primary);
+    text-align: center;
+}
+
+.pin-modal-title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+.pin-modal-description {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+.pin-input-container {
+    margin-bottom: 2rem;
+}
+
+.pin-input {
+    width: 100%;
+    background-color: var(--bg-card);
+    border: 2px solid var(--text-primary);
+    padding: 0.8rem;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    letter-spacing: 0.5em;
+    text-align: center;
+}
+
+.pin-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.pin-modal-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.pin-modal-btn {
+    flex: 1;
+}
+
+/* Multi-user selections role tags */
+.favorites-author-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-left: var(--border-thin);
+    padding-left: 1.5rem;
+}
+
+.role-select {
+    background-color: var(--bg-dark);
+    border: 2px solid var(--text-primary);
+    color: var(--text-primary);
+    padding: 0.5rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.role-select:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.fav-author-badge-container {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    gap: 4px;
+    z-index: 6;
+}
+
+.fav-author-badge {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border: 1px solid var(--text-primary);
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    text-transform: uppercase;
+}
+
+.fav-author-badge.bride {
+    background-color: #ff8bb4;
+    color: #000;
+    border-color: #000;
+}
+
+.fav-author-badge.groom {
+    background-color: #8bd3ff;
+    color: #000;
+    border-color: #000;
+}
+
+.fav-author-badge.parent {
+    background-color: #ffd98b;
+    color: #000;
+    border-color: #000;
+}
+
+.fav-author-badge.client {
+    background-color: var(--primary);
+    color: var(--bg-dark);
+    border-color: var(--bg-dark);
+}
+
+/* Threaded comments styling */
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.comment-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-item {
+    border: 2px solid var(--text-primary);
+    background-color: var(--bg-card);
+    padding: 1.25rem;
+    position: relative;
+    transition: var(--transition-snappy);
+}
+
+.comment-item:hover {
+    box-shadow: 4px 4px 0px var(--text-primary);
+}
+
+.comment-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.4rem;
+}
+
+.comment-author {
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--primary);
+}
+
+.comment-text {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+}
+
+.comment-reply-trigger {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 0;
+}
+
+.comment-reply-trigger:hover {
+    color: var(--primary);
+}
+
+/* Nested replies indentation */
+.replies-list {
+    margin-left: 2rem;
+    margin-top: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    border-left: 2px solid var(--text-muted);
+    padding-left: 1rem;
+}
+
+.replies-list .comment-item {
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border-color);
+}
+
+.reply-active-banner {
+    display: none;
+    background-color: var(--accent);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.75rem;
+    justify-content: space-between;
+    align-items: center;
+    text-transform: uppercase;
+}
+
+.reply-active-banner button {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 800;
+}
+
+/* ==========================================================================
+   ADVANCED ANIMATIONS & SCROLL EFFECTS
+   ========================================================================== */
+
+/* 1. Scroll-Driven Entrance Reveals (Progressive Enhancement) */
+@keyframes scroll-reveal {
+    from {
+        opacity: 0;
+        transform: translateY(60px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.reveal-on-scroll {
+    /* Base styles for JS fallback or loading */
+    opacity: 0;
+    transform: translateY(40px) scale(0.98);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-on-scroll.revealed {
     opacity: 1;
     transform: translateY(0) scale(1);
-    pointer-events: all;
 }
+
+@supports ((animation-timeline: view()) and (animation-range: entry)) {
+    .reveal-on-scroll {
+        opacity: 1;
+        transform: none;
+        transition: none;
+        animation: scroll-reveal linear both;
+        animation-timeline: view();
+        animation-range: entry 5% cover 30%;
+    }
+}
+
+/* Disable scroll-driven animations for users with motion sensitivity */
+@media (prefers-reduced-motion: reduce) {
+    .reveal-on-scroll {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+}
+
+/* 2. Brutalist Split Text Title Animations */
+[data-split-text] {
+    overflow: hidden;
+    display: inline-block;
+}
+
+[data-split-text] span {
+    display: inline-block;
+    transform: translateY(110%);
+    opacity: 0;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-split span {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* 3. Snappy Ken-Burns Hover Zooms for Brutalist Grids */
+.portfolio-cell {
+    overflow: hidden;
+    position: relative;
+}
+
+.portfolio-cell img {
+    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.portfolio-cell:hover img {
+    transform: scale(1.06) translateY(-4px);
+}
+
+.portfolio-cell .portfolio-overlay-brutalist {
+    transform: translateY(15px);
+    opacity: 0;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.portfolio-cell:hover .portfolio-overlay-brutalist {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Micro-interaction updates for custom cursor feedback */
+.cursor-dot {
+    box-shadow: 0 0 12px rgba(108, 140, 126, 0.4);
+}
+.cursor-dot.hover {
+    box-shadow: 0 0 20px rgba(108, 140, 126, 0.7);
+    border-color: var(--primary);
+}
+.cursor-dot.view {
+    box-shadow: 0 0 25px rgba(108, 140, 126, 0.8);
+    border: 1px solid var(--text-primary);
+}
+
+
+
 

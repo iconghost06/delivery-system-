@@ -10,54 +10,54 @@
     </div>
     
     <!-- Filter Toolbar -->
-    <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 3rem;">
-        <button class="btn btn-outline" style="border-color: var(--primary); color: var(--primary);" onclick="filterPortfolio('all')">All</button>
-        <button class="btn btn-outline" onclick="filterPortfolio('wedding')">Weddings</button>
-        <button class="btn btn-outline" onclick="filterPortfolio('outdoor')">Outdoors</button>
-        <button class="btn btn-outline" onclick="filterPortfolio('maternity')">Maternity</button>
+    <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 4rem;">
+        <button class="btn btn-outline" style="border-color: var(--primary); color: var(--primary);" onclick="filterPortfolio('all', this)">All</button>
+        <button class="btn btn-outline" onclick="filterPortfolio('wedding', this)">Weddings</button>
+        <button class="btn btn-outline" onclick="filterPortfolio('outdoor', this)">Outdoors</button>
+        <button class="btn btn-outline" onclick="filterPortfolio('maternity', this)">Maternity</button>
     </div>
     
     <!-- Gallery Grid -->
-    <div class="portfolio-grid">
+    <div class="portfolio-grid-brutalist">
         <!-- Sample Items with category bindings -->
-        <div class="portfolio-item grid-item" data-category="wedding" onmouseenter="setCursorState('view')" onmouseleave="setCursorState('normal')">
+        <div class="portfolio-cell" data-category="wedding" onmouseenter="setCursorState('view')" onmouseleave="setCursorState('normal')">
             <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=600&q=80" alt="Wedding">
-            <div class="item-overlay">
+            <div class="portfolio-overlay-brutalist">
                 <h3>Ananya & Prashanth</h3>
                 <p>Wedding Ceremony</p>
             </div>
         </div>
-        <div class="portfolio-item grid-item" data-category="outdoor" onmouseenter="setCursorState('view')" onmouseleave="setCursorState('normal')">
+        <div class="portfolio-cell" data-category="outdoor" onmouseenter="setCursorState('view')" onmouseleave="setCursorState('normal')">
             <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80" alt="Pre-Wedding">
-            <div class="item-overlay">
+            <div class="portfolio-overlay-brutalist">
                 <h3>Golden Hour Love</h3>
                 <p>Pre-Wedding Outdoor</p>
             </div>
         </div>
-        <div class="portfolio-item grid-item" data-category="wedding" onmouseenter="setCursorState('view')" onmouseleave="setCursorState('normal')">
+        <div class="portfolio-cell" data-category="wedding" onmouseenter="setCursorState('view')" onmouseleave="setCursorState('normal')">
             <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=600&q=80" alt="Traditional Wedding">
-            <div class="item-overlay">
+            <div class="portfolio-overlay-brutalist">
                 <h3>South Indian Joy</h3>
                 <p>Traditional Ceremony</p>
             </div>
         </div>
-        <div class="portfolio-item grid-item" data-category="maternity" onmouseenter="setCursorState('view')" onmouseleave="setCursorState('normal')">
+        <div class="portfolio-cell" data-category="maternity" onmouseenter="setCursorState('view')" onmouseleave="setCursorState('normal')">
             <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=600&q=80" alt="Maternity">
-            <div class="item-overlay">
+            <div class="portfolio-overlay-brutalist">
                 <h3>A New Beginning</h3>
                 <p>Maternity Portrait</p>
             </div>
         </div>
-        <div class="portfolio-item grid-item" data-category="outdoor" onmouseenter="setCursorState('view')" onmouseleave="setCursorState('normal')">
+        <div class="portfolio-cell" data-category="outdoor" onmouseenter="setCursorState('view')" onmouseleave="setCursorState('normal')">
             <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80" alt="Couple Outdoor">
-            <div class="item-overlay">
+            <div class="portfolio-overlay-brutalist">
                 <h3>Karthik & Divya</h3>
                 <p>Outdoor Shoot</p>
             </div>
         </div>
-        <div class="portfolio-item grid-item" data-category="wedding" onmouseenter="setCursorState('view')" onmouseleave="setCursorState('normal')">
+        <div class="portfolio-cell" data-category="wedding" onmouseenter="setCursorState('view')" onmouseleave="setCursorState('normal')">
             <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=600&q=80" alt="Candid Moment">
-            <div class="item-overlay">
+            <div class="portfolio-overlay-brutalist">
                 <h3>Shruti & Vijay</h3>
                 <p>Candid Wedding</p>
             </div>
@@ -68,20 +68,22 @@
 
 {% block scripts %}
 <script>
-function filterPortfolio(category) {
-    const items = document.querySelectorAll('.portfolio-item');
-    const buttons = document.querySelectorAll('button');
+function filterPortfolio(category, activeBtn) {
+    const items = document.querySelectorAll('.portfolio-cell');
+    const buttons = document.querySelectorAll('.btn-outline');
     
-    // Update button states
+    // Update button active state colors
     buttons.forEach(btn => {
-        if(btn.innerText.toLowerCase().includes(category)) {
-            btn.style.borderColor = 'var(--primary)';
-            btn.style.color = 'var(--primary)';
-        } else {
-            btn.style.borderColor = 'var(--text-primary)';
-            btn.style.color = 'var(--text-primary)';
-        }
+        btn.style.borderColor = 'var(--text-primary)';
+        btn.style.color = 'var(--text-primary)';
+        btn.classList.remove('active');
     });
+
+    if (activeBtn) {
+        activeBtn.style.borderColor = 'var(--primary)';
+        activeBtn.style.color = 'var(--primary)';
+        activeBtn.classList.add('active');
+    }
 
     items.forEach(item => {
         if (category === 'all' || item.getAttribute('data-category') === category) {
