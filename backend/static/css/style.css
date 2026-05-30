@@ -870,3 +870,265 @@ footer {
         transform: translateY(0);
     }
 }
+
+/* ==========================================================================
+   5. NEXT-GEN INTERACTIVE ANIMATIONS & TOKENS (DESIGN SANDBOX UPGRADE)
+   ========================================================================== */
+
+/* Typography & Variables Setup */
+:root {
+    --font-mono: 'JetBrains Mono', monospace;
+    --cursor-size: 10px;
+}
+
+/* Custom noise overlay to add rich organic texture on background */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    opacity: 0.02;
+    pointer-events: none;
+    z-index: 9999;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Custom Interactive Cursor Follower */
+@media (hover: hover) {
+    body {
+        cursor: none; /* Hide default cursor on desktop hover devices */
+    }
+    
+    a, button, input, select, textarea, [role="button"], .shutter-btn {
+        cursor: none;
+    }
+    
+    .cursor-dot {
+        width: var(--cursor-size);
+        height: var(--cursor-size);
+        background-color: var(--text-primary);
+        border-radius: 50%;
+        position: fixed;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        z-index: 10000;
+        mix-blend-mode: difference;
+        transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
+                    height 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
+                    background-color 0.3s ease,
+                    border 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-mono);
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: transparent;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        white-space: nowrap;
+    }
+    
+    .cursor-dot.hover {
+        width: 48px;
+        height: 48px;
+        background-color: transparent;
+        border: 1px solid var(--primary);
+        mix-blend-mode: normal;
+    }
+    
+    .cursor-dot.view {
+        width: 72px;
+        height: 72px;
+        background-color: var(--primary);
+        border: none;
+        mix-blend-mode: normal;
+        color: var(--bg-dark);
+    }
+}
+
+@media (hover: none) {
+    .cursor-dot {
+        display: none !important;
+    }
+}
+
+/* Magnetic Wrapper */
+.magnetic-wrapper {
+    position: relative;
+    z-index: 2;
+    display: inline-block;
+}
+
+.magnetic-link {
+    transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Liquid Gooey Navbar Background Indicator */
+nav {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-radius: 40px;
+}
+
+.gooey-blob {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    background-color: rgba(var(--primary), 0.15); /* Tint of Emerald Green */
+    background: color-mix(in oklch, var(--primary) 15%, transparent);
+    border-radius: 20px;
+    z-index: 1;
+    opacity: 0;
+    pointer-events: none;
+    transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+                left 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+                opacity 0.3s ease;
+}
+
+.logo-icon {
+    overflow: visible;
+}
+
+.lens-pic {
+    opacity: 0;
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lens-pic.active {
+    opacity: 1;
+}
+
+/* Asymmetric Editorial Grid Hover Tilt & Lift */
+.grid-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+}
+
+.grid-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.6s ease;
+}
+
+.grid-item:hover img {
+    transform: scale(1.04);
+}
+
+.frame-label {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    z-index: 10;
+    letter-spacing: 0.1em;
+}
+
+.item-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 30px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+    color: #fff;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 10;
+}
+
+.grid-item:hover .item-overlay {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.item-overlay h3 {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    margin-bottom: 6px;
+    font-weight: 400;
+}
+
+.item-overlay p {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+/* Shutter Client Login Portal */
+.shutter-login-container {
+    position: relative;
+    display: inline-block;
+}
+
+.shutter-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                color 0.3s ease,
+                border-color 0.3s ease;
+}
+
+.shutter-btn:hover {
+    transform: rotate(90deg);
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.shutter-login-container.active .shutter-btn {
+    transform: rotate(135deg);
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.shutter-menu-panel {
+    position: absolute;
+    top: calc(100% + 16px);
+    right: 0;
+    width: 280px;
+    padding: 24px;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border-color);
+    border-radius: 18px;
+    box-shadow: var(--shadow-soft);
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+    pointer-events: none;
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 1000;
+}
+
+.shutter-login-container.active .shutter-menu-panel {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: all;
+}
+

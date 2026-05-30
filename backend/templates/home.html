@@ -20,9 +20,13 @@
     <div class="hero-content">
         <h1>An Art of Observation</h1>
         <p>Capture the soul, not just the smile. One of the best wedding and event photographers in Chennai, dedicating full attention to one wedding at a time.</p>
-        <div style="display: flex; gap: 1rem; justify-content: center;">
-            <a href="/portfolio" class="btn btn-primary">View Portfolio</a>
-            <a href="/contact-us" class="btn btn-outline">Enquire Now</a>
+        <div style="display: flex; gap: 1.5rem; justify-content: center; align-items: center;">
+            <div class="magnetic-wrapper" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')">
+                <a href="/portfolio" class="btn btn-primary magnetic-link">View Portfolio</a>
+            </div>
+            <div class="magnetic-wrapper" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')">
+                <a href="/contact-us" class="btn btn-outline magnetic-link">Enquire Now</a>
+            </div>
         </div>
     </div>
     
@@ -56,20 +60,26 @@
         </div>
         
         <div class="services-grid">
-            <div class="service-card">
+            <div class="service-card grid-item" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')" style="padding: 2.5rem; text-align: left;">
                 <h3>Wedding Stories</h3>
                 <p>Candid and traditional coverages that document real emotions, stolen glances, and celebrations.</p>
-                <a href="/portfolio" style="color: var(--primary); font-size: 0.85rem; font-weight: 600; display: inline-block; margin-top: 1.5rem;">Learn More &rarr;</a>
+                <div class="magnetic-wrapper" style="margin-top: 1.5rem;">
+                    <a href="/portfolio" class="magnetic-link" style="color: var(--primary); font-size: 0.85rem; font-weight: 600; display: inline-block;">Learn More &rarr;</a>
+                </div>
             </div>
-            <div class="service-card">
+            <div class="service-card grid-item" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')" style="padding: 2.5rem; text-align: left;">
                 <h3>Pre/Post-Weddings</h3>
                 <p>Beautiful cinematic outdoor sessions highlighting natural chemistry in scenic locations.</p>
-                <a href="/portfolio" style="color: var(--primary); font-size: 0.85rem; font-weight: 600; display: inline-block; margin-top: 1.5rem;">Learn More &rarr;</a>
+                <div class="magnetic-wrapper" style="margin-top: 1.5rem;">
+                    <a href="/portfolio" class="magnetic-link" style="color: var(--primary); font-size: 0.85rem; font-weight: 600; display: inline-block;">Learn More &rarr;</a>
+                </div>
             </div>
-            <div class="service-card">
+            <div class="service-card grid-item" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')" style="padding: 2.5rem; text-align: left;">
                 <h3>Maternity & Baby Showers</h3>
                 <p>Cherishing motherhood milestones with soft, warm, and memorable family photography.</p>
-                <a href="/portfolio" style="color: var(--primary); font-size: 0.85rem; font-weight: 600; display: inline-block; margin-top: 1.5rem;">Learn More &rarr;</a>
+                <div class="magnetic-wrapper" style="margin-top: 1.5rem;">
+                    <a href="/portfolio" class="magnetic-link" style="color: var(--primary); font-size: 0.85rem; font-weight: 600; display: inline-block;">Learn More &rarr;</a>
+                </div>
             </div>
         </div>
     </div>

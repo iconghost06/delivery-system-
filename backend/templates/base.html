@@ -9,36 +9,92 @@
     <link rel="stylesheet" href="/static/css/style.css">
     {% block extra_head %}{% endblock %}
 </head>
-
 <body>
+
+    <!-- 1. Custom Cursor Follower -->
+    <div class="cursor-dot" id="customCursor"></div>
+
+    <!-- Liquid SVG Filter -->
+    <svg style="position: absolute; width: 0; height: 0;">
+        <defs>
+            <filter id="gooey-filter">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
+                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo" />
+                <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+            </filter>
+        </defs>
+    </svg>
 
     <!-- Header navigation -->
     <header>
         <div class="container header-container">
-            <a href="/" class="logo">
-                <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);">
+            <a href="/" class="logo" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')">
+                <svg class="logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                    <circle class="logo-lens" cx="12" cy="13" r="4"></circle>
+                    <defs>
+                        <clipPath id="lens-circle-clip">
+                            <circle cx="12" cy="13" r="4.5" />
+                        </clipPath>
+                    </defs>
+                    <g clip-path="url(#lens-circle-clip)">
+                        <rect x="7" y="8" width="10" height="10" fill="var(--bg-dark)" />
+                        <!-- Previews that crossfade inside the lens -->
+                        <image id="lens-default" class="lens-pic active" x="7" y="8" width="10" height="10" href="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&w=100&q=80" />
+                        <image id="lens-wedding" class="lens-pic" x="7" y="8" width="10" height="10" href="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=100&q=80" />
+                        <image id="lens-landscape" class="lens-pic" x="7" y="8" width="10" height="10" href="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=100&q=80" />
+                    </g>
+                    <circle cx="12" cy="13" r="4.5" stroke="var(--primary)" stroke-width="0.5"/>
                 </svg>
-                AURA
+                <span>AURA</span>
             </a>
 
             <nav>
-                <a href="/" class="nav-link {% if active_page == 'home' %}active{% endif %}">Home</a>
-                <a href="/about" class="nav-link {% if active_page == 'about' %}active{% endif %}">About Us</a>
-                <a href="/portfolio" class="nav-link {% if active_page == 'portfolio' %}active{% endif %}">Portfolio</a>
-                <a href="/our-services"
-                    class="nav-link {% if active_page == 'services' %}active{% endif %}">Services</a>
-                <a href="/wedding-film"
-                    class="nav-link {% if active_page == 'wedding_film' %}active{% endif %}">Films</a>
-                <a href="/live-stream" class="nav-link {% if active_page == 'live_stream' %}active{% endif %}">Live
-                    Stream</a>
-                <a href="/blog" class="nav-link {% if active_page == 'blog' %}active{% endif %}">Blog</a>
-                <a href="/contact-us" class="nav-link {% if active_page == 'contact' %}active{% endif %}">Contact</a>
-                <a href="/client/login" class="nav-link nav-btn"
-                    style="margin-left: 1rem; border: 1px solid var(--primary); padding: 0.4rem 1rem; border-radius: 4px; color: var(--primary);">Client
-                    Login</a>
+                <div class="magnetic-wrapper" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')">
+                    <a href="/" class="nav-link magnetic-link {% if active_page == 'home' %}active{% endif %}" onmouseenter="showLensPreview('lens-default', this)">Home</a>
+                </div>
+                <div class="magnetic-wrapper" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')">
+                    <a href="/about" class="nav-link magnetic-link {% if active_page == 'about' %}active{% endif %}" onmouseenter="showLensPreview('lens-default', this)">About Us</a>
+                </div>
+                <div class="magnetic-wrapper" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')">
+                    <a href="/portfolio" class="nav-link magnetic-link {% if active_page == 'portfolio' %}active{% endif %}" onmouseenter="showLensPreview('lens-landscape', this)">Portfolio</a>
+                </div>
+                <div class="magnetic-wrapper" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')">
+                    <a href="/our-services" class="nav-link magnetic-link {% if active_page == 'services' %}active{% endif %}" onmouseenter="showLensPreview('lens-wedding', this)">Services</a>
+                </div>
+                <div class="magnetic-wrapper" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')">
+                    <a href="/wedding-film" class="nav-link magnetic-link {% if active_page == 'wedding_film' %}active{% endif %}" onmouseenter="showLensPreview('lens-wedding', this)">Films</a>
+                </div>
+                <div class="magnetic-wrapper" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')">
+                    <a href="/live-stream" class="nav-link magnetic-link {% if active_page == 'live_stream' %}active{% endif %}" onmouseenter="showLensPreview('lens-default', this)">Live Stream</a>
+                </div>
+                <div class="magnetic-wrapper" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')">
+                    <a href="/blog" class="nav-link magnetic-link {% if active_page == 'blog' %}active{% endif %}" onmouseenter="showLensPreview('lens-default', this)">Blog</a>
+                </div>
+                <div class="magnetic-wrapper" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')">
+                    <a href="/contact-us" class="nav-link magnetic-link {% if active_page == 'contact' %}active{% endif %}" onmouseenter="showLensPreview('lens-default', this)">Contact</a>
+                </div>
+                
+                <!-- Aperture Client Login Trigger -->
+                <div class="shutter-login-container" id="shutterMenuContainer" style="margin-left: 1rem;">
+                    <div class="shutter-btn" onclick="toggleShutterMenu()" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="2" x2="12" y2="22"></line>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                        </svg>
+                    </div>
+                    <div class="shutter-menu-panel">
+                        <h3 style="font-family: var(--font-heading); font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--text-primary); font-weight: 500;">Client Portal</h3>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">Access your proofs & downloads</p>
+                        <a href="/client/login" class="nav-btn" style="display: block; width: 100%; text-align: center; padding: 0.5rem; background: var(--primary); color: var(--bg-dark); font-weight: 700; border-radius: 4px; font-size: 0.85rem;" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')">Client Login</a>
+                        <div style="margin-top: 0.75rem; border-top: 1px solid var(--border-color); padding-top: 0.75rem; text-align: center;">
+                            <a href="/admin/dashboard" style="font-size: 0.7rem; color: var(--text-muted);" onmouseenter="setCursorState('hover')" onmouseleave="setCursorState('normal')">Photographer Portal</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Liquid background tracker pill -->
+                <div class="gooey-blob" id="navBlob"></div>
             </nav>
         </div>
     </header>
@@ -87,6 +143,7 @@
         </div>
     </footer>
 
+    <script src="/static/js/design_effects.js"></script>
     {% block scripts %}{% endblock %}
 </body>
 
