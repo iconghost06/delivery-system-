@@ -94,6 +94,86 @@ def init_db():
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS quotes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        secure_hash TEXT UNIQUE NOT NULL,
+        title TEXT NOT NULL,
+        description TEXT,
+        client_id INTEGER,
+        inquiry_id INTEGER,
+        status TEXT DEFAULT 'Draft',
+        total_amount REAL DEFAULT 0.0,
+        client_feedback TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY(client_id) REFERENCES clients(id) ON DELETE SET NULL,
+        FOREIGN KEY(inquiry_id) REFERENCES inquiries(id) ON DELETE SET NULL
+    );
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS quote_items (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        quote_id INTEGER NOT NULL,
+        item_name TEXT NOT NULL,
+        item_description TEXT,
+        price REAL NOT NULL,
+        quantity INTEGER DEFAULT 1,
+        FOREIGN KEY(quote_id) REFERENCES quotes(id) ON DELETE CASCADE
+    );
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS calendar_events (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        description TEXT,
+        start_date TEXT NOT NULL,
+        end_date TEXT,
+        client_id INTEGER,
+        event_type TEXT DEFAULT 'Shoot',
+        location TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY(client_id) REFERENCES clients(id) ON DELETE SET NULL
+    );
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS invoices (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        invoice_number TEXT UNIQUE NOT NULL,
+        secure_hash TEXT UNIQUE NOT NULL,
+        client_id INTEGER,
+        quote_id INTEGER,
+        title TEXT NOT NULL,
+        issue_date TEXT NOT NULL,
+        due_date TEXT NOT NULL,
+        status TEXT DEFAULT 'Unpaid',
+        subtotal REAL DEFAULT 0.0,
+        discount REAL DEFAULT 0.0,
+        tax_rate REAL DEFAULT 0.0,
+        tax_amount REAL DEFAULT 0.0,
+        total_amount REAL DEFAULT 0.0,
+        billing_address TEXT,
+        notes TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY(client_id) REFERENCES clients(id) ON DELETE SET NULL,
+        FOREIGN KEY(quote_id) REFERENCES quotes(id) ON DELETE SET NULL
+    );
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS invoice_items (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        invoice_id INTEGER NOT NULL,
+        item_name TEXT NOT NULL,
+        item_description TEXT,
+        price REAL NOT NULL,
+        quantity INTEGER DEFAULT 1,
+        FOREIGN KEY(invoice_id) REFERENCES invoices(id) ON DELETE CASCADE
+    );
+    """)
     
     # Safe schema migrations for existing databases
     try:

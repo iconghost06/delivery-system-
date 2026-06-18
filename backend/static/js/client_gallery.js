@@ -71,7 +71,7 @@ function renderFavBadges(photoId) {
 // Toggle favorite status asynchronously
 function toggleFavorite(button, photoId) {
     const formData = new FormData();
-    formData.append('photo_id', photoId);
+    formData.append('photo_id', photoId)
     formData.append('author', activeRole);
 
     fetch(`/api/gallery/${GALLERY_HASH}/favorite`, {

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | Aura Photography</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style.css?v=20260602">
     <style>
         body {
             background-color: var(--bg-dark);
@@ -51,6 +51,9 @@
         <h2 style="font-size: 1.5rem; color: var(--primary); margin-bottom: 2rem;">AURA</h2>
         <div class="admin-menu">
             <a href="/admin/dashboard" class="admin-menu-link active">Dashboard</a>
+            <a href="/admin/quotes" class="admin-menu-link">Quotes</a>
+            <a href="/admin/invoices" class="admin-menu-link">Invoices</a>
+            <a href="/admin/calendar" class="admin-menu-link">Calendar</a>
             <a href="/" class="admin-menu-link">Back to Website</a>
             <a href="/admin/logout" class="admin-menu-link" style="color: var(--accent); margin-top: 5rem;">Log Out</a>
         </div>
@@ -67,6 +70,40 @@
                 <button class="btn btn-outline" onclick="toggleClientModal(true)">Create Client Account</button>
                 <button class="btn btn-primary" onclick="toggleGalleryModal(true)">Create Client Gallery</button>
             </div>
+        </div>
+
+        <!-- Upcoming Calendar Shoots Summary -->
+        <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">Upcoming Shoots & Sessions</h2>
+        <div class="table-container" style="margin-bottom: 2.5rem;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Event Title</th>
+                        <th>Event Type</th>
+                        <th>Date</th>
+                        <th>Location</th>
+                        <th>Client Username</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if upcoming_events|length == 0 %}
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">No upcoming sessions scheduled yet.</td>
+                        </tr>
+                    {% endif %}
+                    {% for e in upcoming_events %}
+                        <tr>
+                            <td><strong>{{ e.title }}</strong></td>
+                            <td>
+                                <span class="brutalist-tag" style="font-size: 0.75rem; padding: 0.2rem 0.4rem; background-color: {% if e.event_type == 'Shoot' %}var(--primary){% elif e.event_type == 'Pre-Wedding' %}#e69171{% elif e.event_type == 'Consultation' %}var(--accent){% else %}#5a5345{% endif %}; color: #fff;">{{ e.event_type }}</span>
+                            </td>
+                            <td style="font-family: var(--font-mono); font-size: 0.85rem;">{{ e.start_date }}</td>
+                            <td>{{ e.location or "N/A" }}</td>
+                            <td>{{ e.client_username or "Generic / Direct" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
         
         <!-- Active Galleries List -->

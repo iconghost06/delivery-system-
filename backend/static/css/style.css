@@ -6,30 +6,39 @@
 
 :root {
     /* Color Tokens (Warm Beige, Terracotta & Cream) */
-    --bg-dark: #fbf9f4;       /* Soft linen cream background */
-    --bg-card: #f4f0e6;       /* Warm oat beige panels */
-    --bg-card-hover: #eae4d5; /* Sandstone hover */
-    
-    --primary: #b85a38;       /* Terracotta sienna accent */
+    --bg-dark: #fbf9f4;
+    /* Soft linen cream background */
+    --bg-card: #f4f0e6;
+    /* Warm oat beige panels */
+    --bg-card-hover: #eae4d5;
+    /* Sandstone hover */
+
+    --primary: #b85a38;
+    /* Terracotta sienna accent */
     --primary-light: #cf704c;
-    --accent: #4a685a;        /* Forest green highlights */
-    
-    --text-primary: #1e1b15;  /* Deep warm espresso */
-    --text-secondary: #5a5345;/* Warm taupe */
-    --text-muted: #928670;    /* Sand */
-    
-    --border-color: #e2dcd0;  /* Light clay grid lines */
+    --accent: #4a685a;
+    /* Forest green highlights */
+
+    --text-primary: #1e1b15;
+    /* Deep warm espresso */
+    --text-secondary: #5a5345;
+    /* Warm taupe */
+    --text-muted: #928670;
+    /* Sand */
+
+    --border-color: #e2dcd0;
+    /* Light clay grid lines */
     --border-hover: #c4bba9;
-    
+
     /* Grid Borders */
     --border-thick: 2px solid var(--text-primary);
     --border-thin: 1px solid var(--border-color);
-    
+
     /* Typography */
     --font-heading: 'Space Grotesk', sans-serif;
     --font-body: 'Plus Jakarta Sans', sans-serif;
     --font-mono: 'Space Mono', monospace;
-    
+
     /* Snappy Transitions */
     --transition-smooth: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     --transition-snappy: all 0.1s cubic-bezier(0.16, 1, 0.3, 1);
@@ -41,21 +50,30 @@
 /* Dark Mode overrides - Rich Warm Espresso Cocoa */
 @media (prefers-color-scheme: dark) {
     :root {
-        --bg-dark: #1e1a14;       /* Rich dark espresso chocolate */
-        --bg-card: #28231c;       /* Rich cocoa */
-        --bg-card-hover: #352e25; /* Warm mud */
-        
-        --text-primary: #f7f4ed;  /* Warm cream */
-        --text-secondary: #c8beb0;/* Light linen beige */
-        --text-muted: #8e8170;    /* Sand */
-        
-        --border-color: #3e362c;  /* Dark clay border */
+        --bg-dark: #1e1a14;
+        /* Rich dark espresso chocolate */
+        --bg-card: #28231c;
+        /* Rich cocoa */
+        --bg-card-hover: #352e25;
+        /* Warm mud */
+
+        --text-primary: #f7f4ed;
+        /* Warm cream */
+        --text-secondary: #c8beb0;
+        /* Light linen beige */
+        --text-muted: #8e8170;
+        /* Sand */
+
+        --border-color: #3e362c;
+        /* Dark clay border */
         --border-hover: #584d3f;
-        
-        --primary: #d77855;       /* Soft sienna */
+
+        --primary: #d77855;
+        /* Soft sienna */
         --primary-light: #e69171;
-        --accent: #739282;        /* Soft sage green */
-        
+        --accent: #739282;
+        /* Soft sage green */
+
         --shadow-soft: 4px 4px 0px rgba(0, 0, 0, 0.5);
         --glass-bg: rgba(30, 26, 20, 0.85);
     }
@@ -83,14 +101,17 @@ body {
     width: 10px;
     height: 10px;
 }
+
 ::-webkit-scrollbar-track {
     background: var(--bg-dark);
     border-left: var(--border-thin);
 }
+
 ::-webkit-scrollbar-thumb {
     background: var(--text-muted);
     border: 2px solid var(--bg-dark);
 }
+
 ::-webkit-scrollbar-thumb:hover {
     background: var(--primary);
 }
@@ -102,7 +123,12 @@ a {
 }
 
 /* Heading Typography */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-family: var(--font-heading);
     font-weight: 700;
     text-transform: uppercase;
@@ -186,13 +212,15 @@ nav {
     transition: var(--transition-snappy);
 }
 
-.nav-link:hover, .nav-link.active {
+.nav-link:hover,
+.nav-link.active {
     color: var(--bg-dark) !important;
     background-color: var(--primary);
 }
 
 .nav-link::after {
-    display: none; /* Hide the underline animation of previous theme */
+    display: none;
+    /* Hide the underline animation of previous theme */
 }
 
 /* Hero Section - Brutalist Split Grid */
@@ -207,7 +235,8 @@ nav {
 }
 
 .hero-bg {
-    display: none; /* Removed background cover */
+    display: none;
+    /* Removed background cover */
 }
 
 .hero-text-block {
@@ -276,14 +305,17 @@ nav {
         grid-template-columns: 1fr;
         min-height: auto;
     }
+
     .hero-text-block {
         border-right: none;
         border-bottom: var(--border-thick);
         padding: 3rem 1.5rem;
     }
+
     .hero-text-block h1 {
         font-size: 3rem;
     }
+
     .hero-image-block {
         height: 50vh;
     }
@@ -351,6 +383,7 @@ section {
 }
 
 .section-header p {
+
     color: var(--text-secondary);
     max-width: 500px;
     font-size: 0.95rem;
@@ -407,11 +440,13 @@ section {
     .services-grid-brutalist {
         grid-template-columns: 1fr;
     }
+
     .service-cell {
         border-right: none;
         border-bottom: var(--border-thin);
         padding: 2.5rem 1.5rem;
     }
+
     .service-cell:last-child {
         border-bottom: none;
     }
@@ -439,12 +474,12 @@ section {
     height: 100%;
     object-fit: cover;
     display: block;
-    filter: grayscale(100%);
+    /* filter: grayscale(100%); */
     transition: filter 0.3s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .portfolio-cell:hover img {
-    filter: grayscale(0%);
+    /* filter: grayscale(0%); */
     transform: scale(1.03);
 }
 
@@ -569,7 +604,8 @@ textarea.form-control {
     transition: var(--transition-smooth);
 }
 
-.toolbar-btn.active, .toolbar-btn:hover {
+.toolbar-btn.active,
+.toolbar-btn:hover {
     color: var(--primary);
     background-color: var(--bg-dark);
 }
@@ -743,7 +779,8 @@ textarea.form-control {
     margin-bottom: 0.5rem;
 }
 
-.admin-menu-link:hover, .admin-menu-link.active {
+.admin-menu-link:hover,
+.admin-menu-link.active {
     background-color: var(--bg-dark);
     color: var(--primary);
 }
@@ -846,6 +883,7 @@ footer {
         opacity: 0;
         transform: translateY(-20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -857,6 +895,7 @@ footer {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -864,9 +903,17 @@ footer {
 }
 
 @keyframes pop {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.4); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.4);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 /* ==========================================
@@ -883,6 +930,7 @@ footer {
         transform: scale(1);
         transform-origin: 12px 13px;
     }
+
     100% {
         transform: scale(1.3);
         transform-origin: 12px 13px;
@@ -910,10 +958,12 @@ footer {
         transform: translateY(0);
         opacity: 1;
     }
+
     50% {
         transform: translateY(6px);
         opacity: 0.3;
     }
+
     100% {
         transform: translateY(0);
         opacity: 1;
@@ -942,7 +992,8 @@ footer {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: var(--bg-dark); /* deep carbon dark background */
+    background-color: var(--bg-dark);
+    /* deep carbon dark background */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1034,22 +1085,25 @@ body::before {
 /* Custom Interactive Cursor Follower */
 @media (hover: hover) {
     body.custom-cursor-active {
-        cursor: none; /* Hide default cursor on desktop hover devices only on public/client pages */
+        cursor: none;
+        /* Hide default cursor on desktop hover devices only on public/client pages */
     }
-    
-    body.custom-cursor-active a, 
-    body.custom-cursor-active button, 
-    body.custom-cursor-active [role="button"], 
-    body.custom-cursor-active .shutter-btn, 
+
+    body.custom-cursor-active a,
+    body.custom-cursor-active button,
+    body.custom-cursor-active [role="button"],
+    body.custom-cursor-active .shutter-btn,
     body.custom-cursor-active .action-icon {
         cursor: none;
     }
-    
+
     .cursor-dot {
         width: 24px;
         height: 24px;
-        background-color: var(--primary); /* Neon green */
-        border: 2px solid var(--bg-dark); /* Crisp dark outline */
+        background-color: var(--primary);
+        /* Neon green */
+        border: 2px solid var(--bg-dark);
+        /* Crisp dark outline */
         box-shadow: 0 0 10px var(--primary);
         border-radius: 50%;
         position: fixed;
@@ -1066,12 +1120,12 @@ body::before {
         text-transform: uppercase;
         letter-spacing: 0.05em;
         white-space: nowrap;
-        transition: width 0.15s cubic-bezier(0.19, 1, 0.22, 1), 
-                    height 0.15s cubic-bezier(0.19, 1, 0.22, 1), 
-                    border-radius 0.15s ease,
-                    background-color 0.15s ease;
+        transition: width 0.15s cubic-bezier(0.19, 1, 0.22, 1),
+            height 0.15s cubic-bezier(0.19, 1, 0.22, 1),
+            border-radius 0.15s ease,
+            background-color 0.15s ease;
     }
-    
+
     /* Target design crosshairs */
     .cursor-dot::before {
         content: "";
@@ -1082,6 +1136,7 @@ body::before {
         border-radius: 50%;
         transition: all 0.15s ease;
     }
+
     .cursor-dot::after {
         content: "";
         position: absolute;
@@ -1090,25 +1145,26 @@ body::before {
         background-color: var(--bg-dark);
         transition: all 0.15s ease;
     }
-    
+
     .cursor-dot.hover {
         width: 38px;
         height: 38px;
-        border-radius: 0; /* Square on hover - brutalist! */
+        border-radius: 0;
+        /* Square on hover - brutalist! */
         background-color: var(--primary);
         box-shadow: 0 0 15px var(--primary);
     }
-    
+
     .cursor-dot.hover::before {
         width: 14px;
         height: 14px;
         border-radius: 0;
     }
-    
+
     .cursor-dot.hover::after {
         height: 24px;
     }
-    
+
     .cursor-dot.view {
         width: 64px;
         height: 64px;
@@ -1118,8 +1174,9 @@ body::before {
         font-size: 0.75rem;
         font-weight: 800;
     }
-    
-    .cursor-dot.view::before, .cursor-dot.view::after {
+
+    .cursor-dot.view::before,
+    .cursor-dot.view::after {
         display: none;
     }
 }
@@ -1156,14 +1213,15 @@ nav {
     left: 0px;
     height: 100%;
     background-color: var(--primary);
-    border-radius: 0; /* Sharp rigid rectangles for Brutalist */
+    border-radius: 0;
+    /* Sharp rigid rectangles for Brutalist */
     z-index: 1;
     opacity: 0;
     pointer-events: none;
     mix-blend-mode: difference;
     transition: width 0.2s cubic-bezier(0.25, 1, 0.5, 1),
-                left 0.2s cubic-bezier(0.25, 1, 0.5, 1),
-                opacity 0.15s ease;
+        left 0.2s cubic-bezier(0.25, 1, 0.5, 1),
+        opacity 0.15s ease;
 }
 
 .logo-icon {
@@ -1183,7 +1241,8 @@ nav {
 .grid-item {
     position: relative;
     overflow: hidden;
-    border-radius: 0; /* Sharp corners */
+    border-radius: 0;
+    /* Sharp corners */
     background-color: var(--bg-card);
     border: 2px solid var(--text-primary);
     transition: var(--transition-snappy);
@@ -1261,7 +1320,8 @@ nav {
 .shutter-btn {
     width: 38px;
     height: 38px;
-    border-radius: 0; /* Sharp corner button */
+    border-radius: 0;
+    /* Sharp corner button */
     border: 2px solid var(--text-primary);
     display: flex;
     align-items: center;
@@ -1294,7 +1354,8 @@ nav {
     padding: 24px;
     background: var(--bg-dark);
     border: 2px solid var(--text-primary);
-    border-radius: 0; /* Flat brutalist box */
+    border-radius: 0;
+    /* Flat brutalist box */
     box-shadow: 6px 6px 0 var(--text-primary);
     opacity: 0;
     visibility: hidden;
@@ -1335,7 +1396,8 @@ nav {
     font-family: var(--font-mono);
     font-weight: 800;
     font-size: 1.25rem;
-    color: rgba(255, 255, 255, 0.15); /* Soft translucent white overlay */
+    color: rgba(255, 255, 255, 0.15);
+    /* Soft translucent white overlay */
     text-transform: uppercase;
     letter-spacing: 0.15em;
     transform: rotate(-30deg);
@@ -1622,6 +1684,7 @@ nav {
         opacity: 0;
         transform: translateY(60px) scale(0.97);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -1708,15 +1771,13 @@ nav {
 .cursor-dot {
     box-shadow: 0 0 12px rgba(108, 140, 126, 0.4);
 }
+
 .cursor-dot.hover {
     box-shadow: 0 0 20px rgba(108, 140, 126, 0.7);
     border-color: var(--primary);
 }
+
 .cursor-dot.view {
     box-shadow: 0 0 25px rgba(108, 140, 126, 0.8);
     border: 1px solid var(--text-primary);
 }
-
-
-
-

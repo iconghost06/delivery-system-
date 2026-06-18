@@ -506,6 +506,17 @@ async def admin_dashboard(
     clients_rows = conn.execute("SELECT * FROM clients ORDER BY username ASC").fetchall()
     clients = [dict(c) for c in clients_rows]
     
+    # Get upcoming events
+    upcoming_events_rows = conn.execute("""
+        SELECT calendar_events.*, clients.username AS client_username 
+        FROM calendar_events 
+        LEFT JOIN clients ON calendar_events.client_id = clients.id
+        WHERE date(calendar_events.start_date) >= date('now')
+        ORDER BY calendar_events.start_date ASC
+        LIMIT 5
+    """).fetchall()
+    upcoming_events = [dict(e) for e in upcoming_events_rows]
+    
     conn.close()
     
     return templates.TemplateResponse(
@@ -515,7 +526,8 @@ async def admin_dashboard(
             "admin": admin, 
             "galleries": galleries, 
             "inquiries": inquiries,
-            "clients": clients
+            "clients": clients,
+            "upcoming_events": upcoming_events
         }
     )
 
@@ -771,3 +783,472 @@ async def admin_update_inquiry_status(
         return {"status": "success"}
     conn.close()
     return {"error": "Inquiry not found"}
+
+
+# ==========================================
+# SAAS QUOTES & PROPOSALS ROUTES
+# ==========================================
+
+@app.get("/admin/quotes", response_class=HTMLResponse)
+async def admin_quotes_list(
+    request: Request,
+    admin: dict = Depends(get_current_admin)
+):
+    if not admin:
+        return RedirectResponse(url="/admin/login", status_code=status.HTTP_303_SEE_OTHER)
+        
+    conn = get_db_conn()
+    quotes_rows = conn.execute("""
+        SELECT quotes.*, clients.username AS client_username, inquiries.name AS inquiry_name, inquiries.event_type AS inquiry_event
+        FROM quotes
+        LEFT JOIN clients ON quotes.client_id = clients.id
+        LEFT JOIN inquiries ON quotes.inquiry_id = inquiries.id
+        ORDER BY quotes.created_at DESC
+    """).fetchall()
+    quotes = [dict(q) for q in quotes_rows]
+    
+    clients_rows = conn.execute("SELECT * FROM clients ORDER BY username ASC").fetchall()
+    clients = [dict(c) for c in clients_rows]
+    
+    inquiries_rows = conn.execute("SELECT * FROM inquiries ORDER BY created_at DESC").fetchall()
+    inquiries = [dict(i) for i in inquiries_rows]
+    conn.close()
+    
+    return templates.TemplateResponse(
+        "admin_quotes.html",
+        {
+            "request": request,
+            "admin": admin,
+            "quotes": quotes,
+            "clients": clients,
+            "inquiries": inquiries
+        }
+    )
+
+@app.post("/admin/quotes/new")
+async def admin_create_quote(
+    request: Request,
+    admin: dict = Depends(get_current_admin)
+):
+    if not admin:
+        return RedirectResponse(url="/admin/login", status_code=status.HTTP_303_SEE_OTHER)
+        
+    form_data = await request.form()
+    title = form_data.get("title")
+    description = form_data.get("description")
+    
+    client_id_raw = form_data.get("client_id")
+    client_id = int(client_id_raw) if client_id_raw else None
+    
+    inquiry_id_raw = form_data.get("inquiry_id")
+    inquiry_id = int(inquiry_id_raw) if inquiry_id_raw else None
+    
+    secure_hash = uuid.uuid4().hex
+    
+    conn = get_db_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO quotes (secure_hash, title, description, client_id, inquiry_id) VALUES (?, ?, ?, ?, ?)",
+            (secure_hash, title, description, client_id, inquiry_id)
+        )
+        quote_id = cursor.lastrowid
+        
+        # Extract line items list
+        item_names = form_data.getlist("item_name[]")
+        item_descs = form_data.getlist("item_desc[]")
+        item_prices = form_data.getlist("item_price[]")
+        item_qtys = form_data.getlist("item_qty[]")
+        
+        total_amount = 0.0
+        for i in range(len(item_names)):
+            name = item_names[i]
+            desc = item_descs[i] if i < len(item_descs) else ""
+            price = float(item_prices[i]) if i < len(item_prices) and item_prices[i] else 0.0
+            qty = int(item_qtys[i]) if i < len(item_qtys) and item_qtys[i] else 1
+            
+            conn.execute(
+                "INSERT INTO quote_items (quote_id, item_name, item_description, price, quantity) VALUES (?, ?, ?, ?, ?)",
+                (quote_id, name, desc, price, qty)
+            )
+            total_amount += price * qty
+            
+        # Update total amount
+        conn.execute("UPDATE quotes SET total_amount = ? WHERE id = ?", (total_amount, quote_id))
+        conn.commit()
+    finally:
+        conn.close()
+    
+    return RedirectResponse(url="/admin/quotes", status_code=status.HTTP_303_SEE_OTHER)
+
+@app.post("/admin/quotes/{id}/delete")
+async def admin_delete_quote(
+    id: int,
+    admin: dict = Depends(get_current_admin)
+):
+    if not admin:
+        return RedirectResponse(url="/admin/login", status_code=status.HTTP_303_SEE_OTHER)
+        
+    conn = get_db_conn()
+    conn.execute("DELETE FROM quotes WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
+    return RedirectResponse(url="/admin/quotes", status_code=status.HTTP_303_SEE_OTHER)
+
+@app.post("/admin/quotes/{id}/send")
+async def admin_send_quote(
+    id: int,
+    admin: dict = Depends(get_current_admin)
+):
+    if not admin:
+        return RedirectResponse(url="/admin/login", status_code=status.HTTP_303_SEE_OTHER)
+        
+    conn = get_db_conn()
+    quote = conn.execute("SELECT * FROM quotes WHERE id = ?", (id,)).fetchone()
+    if quote:
+        conn.execute("UPDATE quotes SET status = 'Sent' WHERE id = ?", (id,))
+        conn.commit()
+        # Mock Email log
+        print(f"[MOCK EMAIL] Proposal '{quote['title']}' sent to Client (ID: {quote['client_id'] or 'Direct'}). Access link: /quote/{quote['secure_hash']}")
+    conn.close()
+    return RedirectResponse(url="/admin/quotes", status_code=status.HTTP_303_SEE_OTHER)
+
+@app.get("/quote/{secure_hash}", response_class=HTMLResponse)
+async def view_proposal(
+    request: Request,
+    secure_hash: str
+):
+    conn = get_db_conn()
+    quote_row = conn.execute("SELECT * FROM quotes WHERE secure_hash = ?", (secure_hash,)).fetchone()
+    if not quote_row:
+        conn.close()
+        return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
+        
+    quote = dict(quote_row)
+    items_rows = conn.execute("SELECT * FROM quote_items WHERE quote_id = ?", (quote["id"],)).fetchall()
+    items = [dict(it) for it in items_rows]
+    conn.close()
+    
+    return templates.TemplateResponse(
+        "client_quote.html",
+        {
+            "request": request,
+            "quote": quote,
+            "items": items
+        }
+    )
+
+@app.post("/quote/{secure_hash}/approve")
+async def approve_proposal(
+    secure_hash: str
+):
+    conn = get_db_conn()
+    quote = conn.execute("SELECT * FROM quotes WHERE secure_hash = ?", (secure_hash,)).fetchone()
+    if quote:
+        conn.execute("UPDATE quotes SET status = 'Approved' WHERE secure_hash = ?", (secure_hash,))
+        conn.commit()
+        # Mock Email notify
+        print(f"[MOCK EMAIL] Proposal '{quote['title']}' was APPROVED by the Client!")
+    conn.close()
+    return RedirectResponse(url=f"/quote/{secure_hash}", status_code=status.HTTP_303_SEE_OTHER)
+
+@app.post("/quote/{secure_hash}/reject")
+async def request_proposal_revision(
+    secure_hash: str,
+    feedback: str = Form(...)
+):
+    conn = get_db_conn()
+    quote = conn.execute("SELECT * FROM quotes WHERE secure_hash = ?", (secure_hash,)).fetchone()
+    if quote:
+        conn.execute("UPDATE quotes SET status = 'Revised', client_feedback = ? WHERE secure_hash = ?", (feedback, secure_hash))
+        conn.commit()
+        # Mock Email notify
+        print(f"[MOCK EMAIL] Client requested revision for '{quote['title']}'. Feedback: {feedback}")
+    conn.close()
+    return RedirectResponse(url=f"/quote/{secure_hash}", status_code=status.HTTP_303_SEE_OTHER)
+
+
+# ==========================================
+# SAAS EVENT CALENDAR ROUTES
+# ==========================================
+
+@app.get("/admin/calendar", response_class=HTMLResponse)
+async def admin_calendar_view(
+    request: Request,
+    admin: dict = Depends(get_current_admin)
+):
+    if not admin:
+        return RedirectResponse(url="/admin/login", status_code=status.HTTP_303_SEE_OTHER)
+        
+    conn = get_db_conn()
+    events_rows = conn.execute("""
+        SELECT calendar_events.*, clients.username AS client_username 
+        FROM calendar_events 
+        LEFT JOIN clients ON calendar_events.client_id = clients.id
+        ORDER BY calendar_events.start_date ASC
+    """).fetchall()
+    events = [dict(e) for e in events_rows]
+    
+    clients_rows = conn.execute("SELECT * FROM clients ORDER BY username ASC").fetchall()
+    clients = [dict(c) for c in clients_rows]
+    conn.close()
+    
+    return templates.TemplateResponse(
+        "admin_calendar.html",
+        {
+            "request": request,
+            "admin": admin,
+            "events": events,
+            "clients": clients
+        }
+    )
+
+@app.post("/admin/calendar/events/new")
+async def admin_create_calendar_event(
+    title: str = Form(...),
+    start_date: str = Form(...),
+    event_type: str = Form("Shoot"),
+    client_id: int | None = Form(None),
+    location: str = Form(None),
+    description: str = Form(None),
+    admin: dict = Depends(get_current_admin)
+):
+    if not admin:
+        return RedirectResponse(url="/admin/login", status_code=status.HTTP_303_SEE_OTHER)
+        
+    conn = get_db_conn()
+    conn.execute(
+        "INSERT INTO calendar_events (title, start_date, event_type, client_id, location, description) VALUES (?, ?, ?, ?, ?, ?)",
+        (title, start_date, event_type, client_id, location, description)
+    )
+    conn.commit()
+    conn.close()
+    
+    return RedirectResponse(url="/admin/calendar", status_code=status.HTTP_303_SEE_OTHER)
+
+@app.post("/admin/calendar/events/{id}/delete")
+async def admin_delete_calendar_event(
+    id: int,
+    admin: dict = Depends(get_current_admin)
+):
+    if not admin:
+        return RedirectResponse(url="/admin/login", status_code=status.HTTP_303_SEE_OTHER)
+        
+    conn = get_db_conn()
+    conn.execute("DELETE FROM calendar_events WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
+    
+    return RedirectResponse(url="/admin/calendar", status_code=status.HTTP_303_SEE_OTHER)
+
+
+# ==========================================
+# SAAS INVOICES & BILLING ROUTES (ZOHO CLONE)
+# ==========================================
+
+@app.get("/admin/invoices", response_class=HTMLResponse)
+async def admin_invoices_list(
+    request: Request,
+    admin: dict = Depends(get_current_admin)
+):
+    if not admin:
+        return RedirectResponse(url="/admin/login", status_code=status.HTTP_303_SEE_OTHER)
+        
+    conn = get_db_conn()
+    invoices_rows = conn.execute("""
+        SELECT invoices.*, clients.username AS client_username 
+        FROM invoices
+        LEFT JOIN clients ON invoices.client_id = clients.id
+        ORDER BY invoices.created_at DESC
+    """).fetchall()
+    invoices = [dict(inv) for inv in invoices_rows]
+    
+    clients_rows = conn.execute("SELECT * FROM clients ORDER BY username ASC").fetchall()
+    clients = [dict(c) for c in clients_rows]
+    conn.close()
+    
+    return templates.TemplateResponse(
+        "admin_invoices.html",
+        {
+            "request": request,
+            "admin": admin,
+            "invoices": invoices,
+            "clients": clients
+        }
+    )
+
+@app.post("/admin/invoices/new")
+async def admin_create_invoice(
+    request: Request,
+    admin: dict = Depends(get_current_admin)
+):
+    if not admin:
+        return RedirectResponse(url="/admin/login", status_code=status.HTTP_303_SEE_OTHER)
+        
+    form_data = await request.form()
+    invoice_number = form_data.get("invoice_number")
+    title = form_data.get("title")
+    billing_address = form_data.get("billing_address")
+    notes = form_data.get("notes")
+    issue_date = form_data.get("issue_date")
+    due_date = form_data.get("due_date")
+    
+    client_id_raw = form_data.get("client_id")
+    client_id = int(client_id_raw) if client_id_raw else None
+    
+    tax_rate = float(form_data.get("tax_rate", 0.0))
+    discount = float(form_data.get("discount", 0.0))
+    
+    secure_hash = uuid.uuid4().hex
+    
+    conn = get_db_conn()
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO invoices (invoice_number, secure_hash, client_id, title, issue_date, due_date, tax_rate, discount, billing_address, notes) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (invoice_number, secure_hash, client_id, title, issue_date, due_date, tax_rate, discount, billing_address, notes)
+        )
+        invoice_id = cursor.lastrowid
+        
+        # Line items
+        item_names = form_data.getlist("item_name[]")
+        item_descs = form_data.getlist("item_desc[]")
+        item_prices = form_data.getlist("item_price[]")
+        item_qtys = form_data.getlist("item_qty[]")
+        
+        subtotal = 0.0
+        for i in range(len(item_names)):
+            name = item_names[i]
+            desc = item_descs[i] if i < len(item_descs) else ""
+            price = float(item_prices[i]) if i < len(item_prices) and item_prices[i] else 0.0
+            qty = int(item_qtys[i]) if i < len(item_qtys) and item_qtys[i] else 1
+            
+            conn.execute(
+                "INSERT INTO invoice_items (invoice_id, item_name, item_description, price, quantity) VALUES (?, ?, ?, ?, ?)",
+                (invoice_id, name, desc, price, qty)
+            )
+            subtotal += price * qty
+            
+        base_amount = max(0.0, subtotal - discount)
+        tax_amount = base_amount * (tax_rate / 100.0)
+        total_amount = base_amount + tax_amount
+        
+        conn.execute(
+            "UPDATE invoices SET subtotal = ?, tax_amount = ?, total_amount = ? WHERE id = ?",
+            (subtotal, tax_amount, total_amount, invoice_id)
+        )
+        conn.commit()
+    finally:
+        conn.close()
+        
+    return RedirectResponse(url="/admin/invoices", status_code=status.HTTP_303_SEE_OTHER)
+
+@app.post("/admin/quotes/{id}/convert")
+async def admin_convert_quote_to_invoice(
+    id: int,
+    admin: dict = Depends(get_current_admin)
+):
+    if not admin:
+        return RedirectResponse(url="/admin/login", status_code=status.HTTP_303_SEE_OTHER)
+        
+    conn = get_db_conn()
+    try:
+        quote = conn.execute("SELECT * FROM quotes WHERE id = ?", (id,)).fetchone()
+        if not quote:
+            conn.close()
+            return RedirectResponse(url="/admin/quotes", status_code=status.HTTP_303_SEE_OTHER)
+            
+        items = conn.execute("SELECT * FROM quote_items WHERE quote_id = ?", (id,)).fetchall()
+        
+        # Build invoice variables
+        import random
+        from datetime import datetime, timedelta
+        
+        random_num = random.randint(1000, 9999)
+        invoice_number = f"INV-{datetime.now().year}-{random_num}"
+        secure_hash = uuid.uuid4().hex
+        
+        today = datetime.now()
+        issue_date = today.strftime("%Y-%m-%d")
+        due_date = (today + timedelta(days=15)).strftime("%Y-%m-%d")
+        
+        tax_rate = 18.0  # Standard GST percentage
+        subtotal = quote["total_amount"]
+        tax_amount = subtotal * 0.18
+        total_amount = subtotal + tax_amount
+        
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO invoices (invoice_number, secure_hash, client_id, quote_id, title, issue_date, due_date, status, subtotal, tax_rate, tax_amount, total_amount, notes) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, 'Unpaid', ?, ?, ?, ?, ?)",
+            (invoice_number, secure_hash, quote["client_id"], id, f"Invoice for {quote['title']}", issue_date, due_date, subtotal, tax_rate, tax_amount, total_amount, "Converted automatically from approved package quote.")
+        )
+        invoice_id = cursor.lastrowid
+        
+        # Copy line items
+        for it in items:
+            conn.execute(
+                "INSERT INTO invoice_items (invoice_id, item_name, item_description, price, quantity) VALUES (?, ?, ?, ?, ?)",
+                (invoice_id, it["item_name"], it["item_description"], it["price"], it["quantity"])
+            )
+            
+        # Optional: update quote status/reference
+        conn.commit()
+    finally:
+        conn.close()
+        
+    return RedirectResponse(url="/admin/invoices", status_code=status.HTTP_303_SEE_OTHER)
+
+@app.post("/admin/invoices/{id}/pay")
+async def admin_record_invoice_payment(
+    id: int,
+    admin: dict = Depends(get_current_admin)
+):
+    if not admin:
+        return RedirectResponse(url="/admin/login", status_code=status.HTTP_303_SEE_OTHER)
+        
+    conn = get_db_conn()
+    conn.execute("UPDATE invoices SET status = 'Paid' WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
+    return RedirectResponse(url="/admin/invoices", status_code=status.HTTP_303_SEE_OTHER)
+
+@app.post("/admin/invoices/{id}/delete")
+async def admin_delete_invoice(
+    id: int,
+    admin: dict = Depends(get_current_admin)
+):
+    if not admin:
+        return RedirectResponse(url="/admin/login", status_code=status.HTTP_303_SEE_OTHER)
+        
+    conn = get_db_conn()
+    conn.execute("DELETE FROM invoices WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
+    return RedirectResponse(url="/admin/invoices", status_code=status.HTTP_303_SEE_OTHER)
+
+@app.get("/invoice/{secure_hash}", response_class=HTMLResponse)
+async def view_invoice_portal(
+    request: Request,
+    secure_hash: str
+):
+    conn = get_db_conn()
+    inv_row = conn.execute("SELECT * FROM invoices WHERE secure_hash = ?", (secure_hash,)).fetchone()
+    if not inv_row:
+        conn.close()
+        return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
+        
+    invoice = dict(inv_row)
+    items_rows = conn.execute("SELECT * FROM invoice_items WHERE invoice_id = ?", (invoice["id"],)).fetchall()
+    items = [dict(it) for it in items_rows]
+    conn.close()
+    
+    return templates.TemplateResponse(
+        "client_invoice.html",
+        {
+            "request": request,
+            "invoice": invoice,
+            "items": items
+        }
+    )

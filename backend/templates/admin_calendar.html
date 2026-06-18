@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Calendar | Aura Photography</title>
+    <link rel="stylesheet" href="/static/css/style.css?v=20260602">
+    <style>
+        body {
+            background-color: var(--bg-dark);
+        }
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            border-radius: 6px;
+        }
+        .calendar-nav-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            transition: var(--transition-snappy);
+        }
+        .calendar-nav-btn:hover {
+            border-color: var(--text-primary);
+            background-color: var(--bg-card-hover);
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background-color: var(--border-color);
+            border: 2px solid var(--text-primary);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+        }
+        .calendar-day-header {
+            background-color: oklch(0.15 0.015 250);
+            color: var(--text-primary);
+            padding: 1rem;
+            text-align: center;
+            font-family: var(--font-heading);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .calendar-day-cell {
+            background-color: var(--bg-card);
+            min-height: 120px;
+            padding: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: var(--transition-snappy);
+            cursor: pointer;
+        }
+        .calendar-day-cell:hover {
+            background-color: var(--bg-card-hover);
+        }
+        .calendar-day-cell.other-month {
+            opacity: 0.35;
+            cursor: default;
+        }
+        .calendar-day-cell.today {
+            border: 2px solid var(--primary);
+            background-color: oklch(from var(--bg-card) l c h / 0.5);
+        }
+        .day-number {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .events-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+            overflow-y: auto;
+            max-height: 80px;
+        }
+        .event-badge {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-weight: 600;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+        }
+        .badge-type-shoot { background-color: var(--primary); }
+        .badge-type-pre-wedding { background-color: #e69171; }
+        .badge-type-consultation { background-color: var(--accent); }
+        .badge-type-meeting { background-color: #5a5345; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+        <h2 style="font-size: 1.5rem; color: var(--primary); margin-bottom: 2rem;">AURA</h2>
+        <div class="admin-menu">
+            <a href="/admin/dashboard" class="admin-menu-link">Dashboard</a>
+            <a href="/admin/quotes" class="admin-menu-link">Quotes</a>
+            <a href="/admin/calendar" class="admin-menu-link active">Calendar</a>
+            <a href="/" class="admin-menu-link">Back to Website</a>
+            <a href="/admin/logout" class="admin-menu-link" style="color: var(--accent); margin-top: 5rem;">Log Out</a>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="admin-main">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
+            <div>
+                <h1 style="font-size: 2rem;">Studio Scheduler</h1>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">Track shoots, meetings, and client assignments</p>
+            </div>
+            <div>
+                <button class="btn btn-primary" onclick="openAddEventModal()">Add Calendar Event</button>
+            </div>
+        </div>
+        
+        <!-- Navigation Header -->
+        <div class="calendar-header">
+            <button class="calendar-nav-btn" onclick="navigateMonth(-1)">&lt; PREV</button>
+            <h2 id="month-year-display" style="font-size: 1.5rem; font-family: var(--font-heading);">June 2026</h2>
+            <button class="calendar-nav-btn" onclick="navigateMonth(1)">NEXT &gt;</button>
+        </div>
+        
+        <!-- Month Grid -->
+        <div class="calendar-grid" id="calendar-grid-container">
+            <!-- Headers filled via JS -->
+            <div class="calendar-day-header">Sun</div>
+            <div class="calendar-day-header">Mon</div>
+            <div class="calendar-day-header">Tue</div>
+            <div class="calendar-day-header">Wed</div>
+            <div class="calendar-day-header">Thu</div>
+            <div class="calendar-day-header">Fri</div>
+            <div class="calendar-day-header">Sat</div>
+            
+            <!-- Cells filled via JS -->
+        </div>
+    </main>
+</div>
+
+<!-- Add Event Modal -->
+<div id="event-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,11,14,0.85); display: none; align-items: center; justify-content: center; z-index: 999;">
+    <div style="background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 3rem; width: 500px; position: relative;">
+        <span style="position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer;" onclick="closeEventModal()">&times;</span>
+        <h2 style="margin-bottom: 2rem;">Schedule Event</h2>
+        
+        <form action="/admin/calendar/events/new" method="POST">
+            <div class="form-group">
+                <label for="e-title">Event Title *</label>
+                <input type="text" id="e-title" name="title" class="form-control" required placeholder="E.g., Sanjay & Priya Pre-Wedding Shoot">
+            </div>
+            <div class="form-group">
+                <label for="e-date">Event Date *</label>
+                <input type="date" id="e-date" name="start_date" class="form-control" required>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label for="e-type">Event Type</label>
+                    <select id="e-type" name="event_type" class="form-control">
+                        <option value="Shoot">Shoot</option>
+                        <option value="Pre-Wedding">Pre-Wedding</option>
+                        <option value="Consultation">Consultation</option>
+                        <option value="Meeting">Meeting</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="e-client">Client Profile</label>
+                    <select id="e-client" name="client_id" class="form-control">
+                        <option value="">-- No Client Linked --</option>
+                        {% for c in clients %}
+                            <option value="{{ c.id }}">{{ c.username }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="e-loc">Location</label>
+                <input type="text" id="e-loc" name="location" class="form-control" placeholder="E.g., Udaipur Palace / Studio A">
+            </div>
+            <div class="form-group">
+                <label for="e-desc">Event Details / Description</label>
+                <textarea id="e-desc" name="description" class="form-control" placeholder="E.g., Outfit colors, shoot duration, creative details..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Schedule Event</button>
+        </form>
+    </div>
+</div>
+
+<!-- View Event Modal -->
+<div id="view-event-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,11,14,0.85); display: none; align-items: center; justify-content: center; z-index: 999;">
+    <div style="background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 3rem; width: 500px; position: relative;">
+        <span style="position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer;" onclick="closeViewEventModal()">&times;</span>
+        <h2 style="margin-bottom: 0.5rem;" id="v-title">Event Title</h2>
+        <span class="brutalist-tag" style="margin-bottom: 2rem;" id="v-tag">Shoot</span>
+        
+        <div style="margin-top: 1.5rem; font-size: 0.95rem; line-height: 1.8;">
+            <p><strong>📅 Date:</strong> <span id="v-date">YYYY-MM-DD</span></p>
+            <p><strong>📍 Location:</strong> <span id="v-loc">Location</span></p>
+            <p id="v-client-container"><strong>👤 Client:</strong> <span id="v-client">Client</span></p>
+            <p style="margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem;" id="v-desc">Event details go here...</p>
+        </div>
+        
+        <form action="" method="POST" id="delete-event-form" style="margin-top: 2.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem; text-align: right;">
+            <button type="submit" class="btn btn-outline" style="border-color: var(--accent); color: var(--accent);" onsubmit="return confirm('Cancel this scheduled event?')">Cancel Event</button>
+        </form>
+    </div>
+</div>
+
+<!-- Raw DB Events injected as JSON -->
+<script>
+    const dbEvents = {{ events|tojson|safe }};
+    
+    let currentDate = new Date(); // Start at today
+    
+    function navigateMonth(direction) {
+        currentDate.setMonth(currentDate.getMonth() + direction);
+        renderCalendar();
+    }
+    
+    function openAddEventModal(dateStr = "") {
+        document.getElementById('event-modal').style.display = 'flex';
+        if (dateStr) {
+            document.getElementById('e-date').value = dateStr;
+        } else {
+            const todayStr = new Date().toISOString().slice(0, 10);
+            document.getElementById('e-date').value = todayStr;
+        }
+    }
+    
+    function closeEventModal() {
+        document.getElementById('event-modal').style.display = 'none';
+    }
+    
+    function openViewEventModal(event) {
+        document.getElementById('view-event-modal').style.display = 'flex';
+        document.getElementById('v-title').innerText = event.title;
+        document.getElementById('v-tag').innerText = event.event_type;
+        document.getElementById('v-tag').className = `brutalist-tag badge-type-${event.event_type.toLowerCase()}`;
+        document.getElementById('v-date').innerText = event.start_date;
+        document.getElementById('v-loc').innerText = event.location || "Not specified";
+        
+        if (event.client_username) {
+            document.getElementById('v-client-container').style.display = 'block';
+            document.getElementById('v-client').innerText = event.client_username;
+        } else {
+            document.getElementById('v-client-container').style.display = 'none';
+        }
+        document.getElementById('v-desc').innerText = event.description || "No description provided.";
+        
+        // Update form action dynamically
+        document.getElementById('delete-event-form').action = `/admin/calendar/events/${event.id}/delete`;
+    }
+    
+    function closeViewEventModal() {
+        document.getElementById('view-event-modal').style.display = 'none';
+    }
+
+    function renderCalendar() {
+        const grid = document.getElementById('calendar-grid-container');
+        
+        // Remove existing day cells
+        const cells = grid.querySelectorAll('.calendar-day-cell');
+        cells.forEach(c => c.remove());
+        
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        
+        // Update display text
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        document.getElementById('month-year-display').innerText = `${monthNames[month]} ${year}`;
+        
+        // First day of current month (0 = Sunday, 1 = Monday, etc.)
+        const firstDayIndex = new Date(year, month, 1).getDay();
+        
+        // Number of days in current month
+        const numDays = new Date(year, month + 1, 0).getDate();
+        
+        // Number of days in previous month
+        const prevNumDays = new Date(year, month, 0).getDate();
+        
+        // Helper to get formatted date string (YYYY-MM-DD)
+        const formatDateString = (y, m, d) => {
+            const mm = String(m + 1).padStart(2, '0');
+            const dd = String(d).padStart(2, '0');
+            return `${y}-${mm}-${dd}`;
+        };
+        
+        // 1. Fill previous month's padding cells
+        for (let i = firstDayIndex - 1; i >= 0; i--) {
+            const dayNum = prevNumDays - i;
+            const cell = document.createElement('div');
+            cell.className = 'calendar-day-cell other-month';
+            cell.innerHTML = `<span class="day-number">${dayNum}</span>`;
+            grid.appendChild(cell);
+        }
+        
+        const todayStr = new Date().toISOString().slice(0, 10);
+        
+        // 2. Fill current month's active cells
+        for (let day = 1; day <= numDays; day++) {
+            const cellDateStr = formatDateString(year, month, day);
+            
+            const cell = document.createElement('div');
+            cell.className = 'calendar-day-cell';
+            if (cellDateStr === todayStr) {
+                cell.classList.add('today');
+            }
+            
+            // Add click event to cell to add event
+            cell.addEventListener('click', (e) => {
+                // If clicked an event badge, don't open the new event modal
+                if (e.target.classList.contains('event-badge')) return;
+                openAddEventModal(cellDateStr);
+            });
+            
+            // Render day number
+            cell.innerHTML = `<span class="day-number">${day}</span>`;
+            
+            // Render events for this day
+            const dayEvents = dbEvents.filter(ev => ev.start_date === cellDateStr);
+            if (dayEvents.length > 0) {
+                const eventsDiv = document.createElement('div');
+                eventsDiv.className = 'events-container';
+                
+                dayEvents.forEach(ev => {
+                    const badge = document.createElement('span');
+                    badge.className = `event-badge badge-type-${ev.event_type.toLowerCase()}`;
+                    badge.innerText = ev.title;
+                    badge.title = ev.title;
+                    badge.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        openViewEventModal(ev);
+                    });
+                    eventsDiv.appendChild(badge);
+                });
+                
+                cell.appendChild(eventsDiv);
+            }
+            
+            grid.appendChild(cell);
+        }
+        
+        // 3. Fill next month's padding cells to make rows clean (grid size multiple of 7)
+        const totalCells = firstDayIndex + numDays;
+        const nextMonthCells = (7 - (totalCells % 7)) % 7;
+        for (let day = 1; day <= nextMonthCells; day++) {
+            const cell = document.createElement('div');
+            cell.className = 'calendar-day-cell other-month';
+            cell.innerHTML = `<span class="day-number">${day}</span>`;
+            grid.appendChild(cell);
+        }
+    }
+    
+    // Initial Render
+    document.addEventListener('DOMContentLoaded', () => {
+        renderCalendar();
+    });
+</script>
+</body>
+</html>

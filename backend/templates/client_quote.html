@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote Proposal | Aura Photography</title>
+    <link rel="stylesheet" href="/static/css/style.css?v=20260602">
+    <style>
+        body {
+            background-color: var(--bg-dark);
+        }
+        .proposal-card {
+            background-color: var(--bg-card);
+            border: 2px solid var(--text-primary);
+            box-shadow: var(--shadow-soft);
+            padding: 3.5rem;
+            margin-top: 120px;
+            margin-bottom: 6rem;
+            position: relative;
+        }
+        .proposal-header {
+            border-bottom: 2px solid var(--text-primary);
+            padding-bottom: 2rem;
+            margin-bottom: 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .proposal-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2.5rem;
+        }
+        .proposal-table th, .proposal-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            text-align: left;
+        }
+        .proposal-table th {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .status-stamp {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            border: 3px double var(--primary);
+            color: var(--primary);
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            font-weight: 800;
+            padding: 0.5rem 1rem;
+            transform: rotate(-5deg);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.85;
+        }
+        .status-stamp.approved {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .status-stamp.revised {
+            border-color: #d77855;
+            color: #d77855;
+        }
+        .action-container {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 3rem;
+            border-top: 2px solid var(--text-primary);
+            padding-top: 2rem;
+        }
+        textarea.feedback-box {
+            width: 100%;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 1rem;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            resize: vertical;
+            min-height: 100px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation Header -->
+<header>
+    <div class="header-container">
+        <a href="/" class="logo">
+            <span>Aura Photography</span>
+        </a>
+        <nav>
+            <div class="magnetic-wrapper">
+                <a href="/" class="nav-link">Home</a>
+            </div>
+            <div class="magnetic-wrapper">
+                <a href="/portfolio" class="nav-link">Portfolio</a>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<div class="container" style="max-width: 900px;">
+    <div class="proposal-card">
+        
+        <!-- Status Stamp Overlay -->
+        {% if quote.status == 'Approved' %}
+            <div class="status-stamp approved">Proposal Approved</div>
+        {% elif quote.status == 'Revised' %}
+            <div class="status-stamp revised">Revision Requested</div>
+        {% endif %}
+        
+        <div class="proposal-header">
+            <div>
+                <span class="brutalist-tag" style="margin-bottom: 0.75rem;">PHOTOGRAPHY PROPOSAL</span>
+                <h1 style="font-size: 2.2rem; margin-bottom: 0.5rem;">{{ quote.title }}</h1>
+                <p style="color: var(--text-secondary);">Date Generated: {{ quote.created_at[:10] }}</p>
+            </div>
+            <div style="text-align: right;">
+                <h3 style="font-size: 1.2rem; color: var(--primary);">Aura Studios</h3>
+                <p style="font-size: 0.9rem; color: var(--text-secondary);">hello@auraphotography.com</p>
+            </div>
+        </div>
+        
+        {% if quote.description %}
+            <div style="margin-bottom: 2.5rem; line-height: 1.7; color: var(--text-secondary);">
+                <h3 style="font-size: 1rem; margin-bottom: 0.5rem; color: var(--text-primary);">Scope of Services</h3>
+                <p>{{ quote.description }}</p>
+            </div>
+        {% endif %}
+        
+        <h3 style="font-size: 1.1rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">Package Deliverables</h3>
+        <table class="proposal-table">
+            <thead>
+                <tr>
+                    <th style="width: 50%;">Item & Details</th>
+                    <th style="width: 20%; text-align: right;">Unit Price</th>
+                    <th style="width: 10%; text-align: center;">Qty</th>
+                    <th style="width: 20%; text-align: right;">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                    <tr>
+                        <td>
+                            <strong>{{ item.item_name }}</strong>
+                            {% if item.item_description %}
+                                <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">{{ item.item_description }}</div>
+                            {% endif %}
+                        </td>
+                        <td style="text-align: right;">₹{{ "{:,.2f}".format(item.price) }}</td>
+                        <td style="text-align: center;">{{ item.quantity }}</td>
+                        <td style="text-align: right; font-weight: 600;">₹{{ "{:,.2f}".format(item.price * item.quantity) }}</td>
+                    </tr>
+                {% endfor %}
+                <tr style="border-top: 2px solid var(--text-primary); background-color: var(--bg-card-hover);">
+                    <td colspan="3" style="text-align: right; font-weight: 700; padding: 1.2rem;">Total Package Value:</td>
+                    <td style="text-align: right; font-weight: 800; font-size: 1.2rem; color: var(--primary); padding: 1.2rem;">₹{{ "{:,.2f}".format(quote.total_amount) }}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div style="background-color: var(--bg-dark); border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 4px; font-size: 0.85rem; line-height: 1.6;">
+            <strong style="color: var(--text-primary); text-transform: uppercase; display: block; margin-bottom: 0.5rem;">Terms & Conditions</strong>
+            <ul>
+                <li>Delivery timeline: High-resolution web galleries will be delivered within 4–6 weeks post shoot.</li>
+                <li>Watermark removal: All watermarks will be removed upon digital sign-off and approval of deliverables.</li>
+                <li>Validity: This proposal is valid for 14 days from the date of issuance.</li>
+            </ul>
+        </div>
+        
+        {% if quote.status == 'Sent' %}
+            <div class="action-container" id="proposal-actions">
+                <form action="/quote/{{ quote.secure_hash }}/approve" method="POST" style="flex: 1;">
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem;">Approve & Sign Proposal</button>
+                </form>
+                <button type="button" class="btn btn-outline" style="flex: 1; padding: 1rem;" onclick="showRevisionBox()">Request Revision</button>
+            </div>
+            
+            <!-- Hidden Revision Feedback Box -->
+            <div id="revision-box" style="display: none; margin-top: 2rem; border-top: 1px dashed var(--border-color); padding-top: 2rem;">
+                <form action="/quote/{{ quote.secure_hash }}/reject" method="POST">
+                    <label for="feedback" style="font-weight: 600; font-size: 0.95rem; color: var(--text-primary);">What changes or revisions would you like to request? *</label>
+                    <textarea id="feedback" name="feedback" class="feedback-box" required placeholder="E.g., Please swap the candid package with traditional video coverage..."></textarea>
+                    
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem; justify-content: flex-end;">
+                        <button type="button" class="btn btn-outline" style="padding: 0.5rem 1rem;" onclick="hideRevisionBox()">Cancel</button>
+                        <button type="submit" class="btn btn-primary" style="padding: 0.5rem 1rem; background-color: var(--accent); border-color: var(--accent);">Submit Revision Request</button>
+                    </div>
+                </form>
+            </div>
+        {% elif quote.status == 'Approved' %}
+            <div style="margin-top: 3rem; background-color: oklch(0.85 0.1 140); color: oklch(0.3 0.1 140); padding: 1.5rem; text-align: center; border-radius: 4px; font-weight: 700;">
+                ✓ Proposal Confirmed & Approved. We will coordinate dates for the scheduling scheduler.
+            </div>
+        {% elif quote.status == 'Revised' %}
+            <div style="margin-top: 3rem; background-color: oklch(0.92 0.05 40); border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 4px;">
+                <strong style="color: var(--primary); display: block; margin-bottom: 0.5rem;">Revision Requested:</strong>
+                <p style="font-size: 0.95rem; font-style: italic; color: var(--text-secondary);">"{{ quote.client_feedback }}"</p>
+                <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">The photographer has been notified and will upload an updated proposal soon.</p>
+            </div>
+        {% endif %}
+        
+    </div>
+</div>
+
+<script>
+    function showRevisionBox() {
+        document.getElementById('revision-box').style.display = 'block';
+        document.getElementById('proposal-actions').style.display = 'none';
+        document.getElementById('feedback').focus();
+    }
+    
+    function hideRevisionBox() {
+        document.getElementById('revision-box').style.display = 'none';
+        document.getElementById('proposal-actions').style.display = 'flex';
+    }
+</script>
+</body>
+</html>
